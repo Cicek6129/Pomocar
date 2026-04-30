@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ShopItem {
   final String id;
@@ -133,16 +135,36 @@ final List<ShopItem> allShopItems = [
     ShopItem(id: 'rock5', category: 'gokyuzu', name: 'Kaya 5',           price: 35, imagePath: 'assets/bush/rock5.png', color: Colors.brown),
     
     // Ses: Arka Plan Müzikleri (Teyp)
-    ShopItem(id: 'music_1', category: 'teyp', name: '(Piyano) Yürek Telleri', price: 800, icon: Icons.piano, color: Colors.brown),
-    ShopItem(id: 'music_2', category: 'teyp', name: 'Sıcacık Şömine', price: 1200, icon: Icons.local_fire_department, color: Colors.deepOrange),
-    ShopItem(id: 'music_3', category: 'teyp', name: '(Lofi) İlham Vuruşları', price: 30, icon: Icons.album, color: Colors.grey.shade800),
-    ShopItem(id: 'music_4', category: 'teyp', name: '(Lofi) Günışığı', price: 1200, icon: Icons.album, color: Colors.orange.shade800),
+    // Ücretsiz
+    ShopItem(id: 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3', category: 'teyp', name: 'Yoğun Yağmur', price: 0, icon: Icons.thunderstorm, color: Colors.indigo),
+
+    // Basic (Doğa / Ambiyans)
+    ShopItem(id: 'assets/sounds/back/Rain_Sound_Effect_-_Relaxation_-_Free_Download_-_No_Copyright_320k.mp3', category: 'teyp', name: 'Hafif Yağmur', price: 30, icon: Icons.cloud, color: Colors.lightBlue),
+    ShopItem(id: 'assets/sounds/back/liecio-calming-rain-257596.mp3', category: 'teyp', name: 'Sakin Yağmur', price: 40, icon: Icons.umbrella, color: Colors.blueGrey),
+    ShopItem(id: 'assets/sounds/back/nils_vega-birds-singing-in-early-summer-359446.mp3', category: 'teyp', name: 'Kuş Sesleri', price: 30, icon: Icons.pets, color: Colors.green),
+    ShopItem(id: 'assets/sounds/back/dragon-studio-soothing-river-flow-372456.mp3', category: 'teyp', name: 'Nehir Sesi', price: 50, icon: Icons.water, color: Colors.blue),
+    ShopItem(id: 'assets/sounds/back/shrek_30-spring-339281.mp3', category: 'teyp', name: 'Bahar Havası', price: 50, icon: Icons.local_florist, color: Colors.lightGreen),
+    ShopItem(id: 'assets/sounds/back/dragon-studio-meditation-music-sound-bite-339735.mp3', category: 'teyp', name: 'Meditasyon', price: 60, icon: Icons.self_improvement, color: Colors.purple),
+
+    // Premium (Müzikler)
+    ShopItem(id: 'assets/sounds/back/freesound_community-study-in-b-minor-75946.mp3', category: 'teyp', name: 'Çalışma (B Minor)', price: 100, icon: Icons.menu_book, color: Colors.brown),
+    ShopItem(id: 'assets/sounds/back/chill_background-study-110111.mp3', category: 'teyp', name: 'Chill Çalışma', price: 120, icon: Icons.headphones, color: Colors.deepPurple),
+    ShopItem(id: 'assets/sounds/back/grand_project-background-lofi-hip-hop-late-night-study-502734.mp3', category: 'teyp', name: 'Lofi Çalışma', price: 150, icon: Icons.nightlife, color: Colors.deepOrange),
+    ShopItem(id: 'assets/sounds/back/ikoliks_aj-acoustic-spring-mothers-day-music-320427.mp3', category: 'teyp', name: 'Akustik Bahar', price: 150, icon: Icons.queue_music, color: Colors.pink),
+    ShopItem(id: 'assets/sounds/back/kontraa-water-afro-pop-music-445661.mp3', category: 'teyp', name: 'Afro Pop', price: 200, icon: Icons.music_note, color: Colors.orange),
 
     // Ses: Alarm Sesleri
-    ShopItem(id: 'alarm_1', category: 'alarm', name: 'Klasik Zil', price: 0, icon: Icons.alarm, color: Colors.blue),
-    ShopItem(id: 'alarm_2', category: 'alarm', name: 'Dijital Bip', price: 15, icon: Icons.notifications_active, color: Colors.teal),
-    ShopItem(id: 'alarm_3', category: 'alarm', name: 'Kuş Sesi', price: 25, icon: Icons.flutter_dash, color: Colors.green),
-    ShopItem(id: 'alarm_4', category: 'alarm', name: 'Çan Sesi', price: 35, icon: Icons.church, color: Colors.amber),
+    // Ücretsiz
+    ShopItem(id: 'assets/sounds/alarms/dragon-studio-cute-chime-439613.mp3', category: 'alarm', name: 'Sevimli Çan', price: 0, icon: Icons.notifications_active, color: Colors.blue),
+
+    // Basic (30 Km)
+    ShopItem(id: 'assets/sounds/alarms/162851__tempouser__alarm.wav', category: 'alarm', name: 'Klasik Alarm', price: 30, icon: Icons.access_alarm, color: Colors.teal),
+    ShopItem(id: 'assets/sounds/alarms/dragon-studio-festive-chime-439612.mp3', category: 'alarm', name: 'Festival Çanı', price: 30, icon: Icons.celebration, color: Colors.orange),
+
+    // Premium (50-80 Km)
+    ShopItem(id: 'assets/sounds/alarms/163562__erh__ring-tone-cbn2-b1-93.wav', category: 'alarm', name: 'Modern Zil', price: 50, icon: Icons.phonelink_ring, color: Colors.indigo),
+    ShopItem(id: 'assets/sounds/alarms/501880__greenworm__cellphone-alarm-clock.mp3', category: 'alarm', name: 'Telefon Alarmı', price: 60, icon: Icons.phone_android, color: Colors.deepPurple),
+    ShopItem(id: 'assets/sounds/alarms/gigidelaromusic-celestial-chime-soft-short-450958.mp3', category: 'alarm', name: 'Göksel Çan', price: 80, icon: Icons.auto_awesome, color: Colors.cyan),
 
     // Temalar
     ShopItem(id: 'Japon', category: 'tema', name: 'Japon Teması', price: 100, icon: Icons.landscape, color: Colors.pink, isWide: true),
@@ -155,6 +177,8 @@ final List<ShopItem> allShopItems = [
 
 class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final AudioPlayer _previewPlayer = AudioPlayer();
+  String? _currentlyPlayingId;
   
   List<String> _purchasedItems = [];
   Map<String, String> _equippedItems = {};
@@ -169,6 +193,13 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
+    _previewPlayer.onPlayerComplete.listen((_) {
+      if (mounted) {
+        setState(() {
+          _currentlyPlayingId = null;
+        });
+      }
+    });
     _loadState();
   }
 
@@ -356,6 +387,7 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
 
   @override
   void dispose() {
+    _previewPlayer.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -397,7 +429,7 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
         : (isCali 
             ? equippedCalilar.contains(item.id) 
             : _equippedItems[item.category] == item.id);
-    bool isMusic = item.category == 'teyp';
+    bool isMusic = item.category == 'teyp' || item.category == 'alarm';
 
     return GestureDetector(
       onTap: () {
@@ -460,13 +492,42 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
                           else if (item.icon != null)
                              Center(child: Icon(item.icon, size: item.isWide ? 64 : 48, color: item.color)),
                           if (isMusic)
-                             Container(
-                                 decoration: const BoxDecoration(
-                                     color: Colors.white54,
-                                     shape: BoxShape.circle,
-                                 ),
-                                 padding: const EdgeInsets.all(8),
-                                 child: const Icon(Icons.play_arrow_rounded, color: Colors.black54, size: 24),
+                             GestureDetector(
+                               onTap: () async {
+                                 if (_currentlyPlayingId == item.id) {
+                                   await _previewPlayer.stop();
+                                   setState(() {
+                                     _currentlyPlayingId = null;
+                                   });
+                                 } else {
+                                   await _previewPlayer.stop();
+                                   try {
+                                     if (kIsWeb) {
+                                       await _previewPlayer.play(UrlSource(item.id));
+                                     } else {
+                                       String assetPath = item.id.replaceAll('assets/', '');
+                                       await _previewPlayer.play(AssetSource(assetPath));
+                                     }
+                                     setState(() {
+                                       _currentlyPlayingId = item.id;
+                                     });
+                                   } catch (e) {
+                                     debugPrint('Error playing preview: $e');
+                                   }
+                                 }
+                               },
+                               child: Container(
+                                   decoration: const BoxDecoration(
+                                       color: Colors.white54,
+                                       shape: BoxShape.circle,
+                                   ),
+                                   padding: const EdgeInsets.all(8),
+                                   child: Icon(
+                                     _currentlyPlayingId == item.id ? Icons.stop_rounded : Icons.play_arrow_rounded, 
+                                     color: Colors.black54, 
+                                     size: 24
+                                   ),
+                               ),
                              ),
                       ],
                     ),

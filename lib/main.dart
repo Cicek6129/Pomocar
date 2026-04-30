@@ -8,6 +8,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -70,6 +71,44 @@ class FocusSession {
       title: json['title'],
     );
   }
+}
+
+const Map<String, String> backgroundMusicOptions = {
+  'Sessiz (Kapat)': 'Sessiz',
+  'Yoğun Yağmur': 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3',
+  'Hafif Yağmur': 'assets/sounds/back/Rain_Sound_Effect_-_Relaxation_-_Free_Download_-_No_Copyright_320k.mp3',
+  'Sakin Yağmur': 'assets/sounds/back/liecio-calming-rain-257596.mp3',
+  'Kuş Sesleri': 'assets/sounds/back/nils_vega-birds-singing-in-early-summer-359446.mp3',
+  'Nehir Sesi': 'assets/sounds/back/dragon-studio-soothing-river-flow-372456.mp3',
+  'Bahar Havası': 'assets/sounds/back/shrek_30-spring-339281.mp3',
+  'Meditasyon': 'assets/sounds/back/dragon-studio-meditation-music-sound-bite-339735.mp3',
+  'Çalışma (B Minor)': 'assets/sounds/back/freesound_community-study-in-b-minor-75946.mp3',
+  'Chill Çalışma': 'assets/sounds/back/chill_background-study-110111.mp3',
+  'Lofi Çalışma': 'assets/sounds/back/grand_project-background-lofi-hip-hop-late-night-study-502734.mp3',
+  'Akustik Bahar': 'assets/sounds/back/ikoliks_aj-acoustic-spring-mothers-day-music-320427.mp3',
+  'Afro Pop': 'assets/sounds/back/kontraa-water-afro-pop-music-445661.mp3',
+};
+
+String getMusicNameFromPath(String path) {
+  return backgroundMusicOptions.entries
+      .firstWhere((entry) => entry.value == path, orElse: () => const MapEntry('Sessiz (Kapat)', 'Sessiz'))
+      .key;
+}
+
+const Map<String, String> alarmMusicOptions = {
+  'Sessiz (Kapat)': 'Sessiz',
+  'Sevimli Çan': 'assets/sounds/alarms/dragon-studio-cute-chime-439613.mp3',
+  'Klasik Alarm': 'assets/sounds/alarms/162851__tempouser__alarm.wav',
+  'Festival Çanı': 'assets/sounds/alarms/dragon-studio-festive-chime-439612.mp3',
+  'Modern Zil': 'assets/sounds/alarms/163562__erh__ring-tone-cbn2-b1-93.wav',
+  'Telefon Alarmı': 'assets/sounds/alarms/501880__greenworm__cellphone-alarm-clock.mp3',
+  'Göksel Çan': 'assets/sounds/alarms/gigidelaromusic-celestial-chime-soft-short-450958.mp3',
+};
+
+String getAlarmNameFromPath(String path) {
+  return alarmMusicOptions.entries
+      .firstWhere((entry) => entry.value == path, orElse: () => const MapEntry('Sessiz (Kapat)', 'Sessiz'))
+      .key;
 }
 
 // Timer Settings Controller for state management
@@ -773,7 +812,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
             if (targetPath != 'Sessiz') {
                 await _audioPlayer.setReleaseMode(ReleaseMode.loop);
                 String assetPath = targetPath.replaceAll('assets/', '');
-                await _audioPlayer.play(AssetSource(assetPath));
+                await _audioPlayer.play(kIsWeb ? UrlSource(targetPath) : AssetSource(assetPath));
                 setState(() { _isPlayingMusic = true; });
             } else {
                 await _audioPlayer.pause();
@@ -1006,17 +1045,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
     final prefs = await SharedPreferences.getInstance();
     String currentBgMusic = prefs.getString('bgMusicPath') ?? 'Sessiz';
     
-    final Map<String, String> options = {
-      'Sessiz (Kapat)': 'Sessiz',
-      'Yoğun Yağmur': 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3',
-      'Meditasyon': 'assets/sounds/back/dragon-studio-meditation-music-sound-bite-339735.mp3',
-      'Nehir Sesi': 'assets/sounds/back/dragon-studio-soothing-river-flow-372456.mp3',
-      'Çalışma Müziği (B Minor)': 'assets/sounds/back/freesound_community-study-in-b-minor-75946.mp3',
-      'Kuş Sesleri': 'assets/sounds/back/nils_vega-birds-singing-in-early-summer-359446.mp3',
-      'Hafif Yağmur': 'assets/sounds/back/Rain_Sound_Effect_-_Relaxation_-_Free_Download_-_No_Copyright_320k.mp3',
-    };
+    final Map<String, String> options = backgroundMusicOptions;
 
     String tempSelectedPath = currentBgMusic;
+    List<String> unlockedSounds = prefs.getStringList('purchased_items') ?? [];
 
     showDialog(
       context: context,
@@ -1037,42 +1069,62 @@ class _PomodoroHomeState extends State<PomodoroHome>
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
                     ),
                     const SizedBox(height: 16),
-                    ...options.entries.map((entry) {
-                      return Column(
-                         children: [
-                           ListTile(
-                             leading: entry.value != 'Sessiz' ? IconButton(
-                               icon: Icon(Icons.play_circle_fill, color: Theme.of(context).primaryColor, size: 32),
-                               onPressed: () async {
-                                 try {
-                                   await _previewPlayer.stop();
-                                   String assetPath = entry.value.replaceAll('assets/', '');
-                                   await _previewPlayer.play(AssetSource(assetPath));
-                                 } catch (e) {
-                                   debugPrint("Could not play bg preview: $e");
-                                 }
-                               },
-                             ) : const SizedBox(width: 48, child: Icon(Icons.volume_off, color: Colors.grey)),
-                             title: Text(entry.key, style: const TextStyle(fontWeight: FontWeight.w500)),
-                             trailing: tempSelectedPath == entry.value 
-                                 ? Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor) 
-                                 : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
-                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                             onTap: () {
-                               setDialogState(() {
-                                 tempSelectedPath = entry.value;
-                               });
-                             },
-                             onLongPress: () {
-                               setDialogState(() {
-                                 tempSelectedPath = entry.value;
-                               });
-                             },
-                           ),
-                           const Divider(),
-                         ],
-                      );
-                    }),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: options.entries.map((entry) {
+                            bool isFree = entry.value == 'Sessiz' || entry.value == 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3';
+                            bool isLocked = !isFree && !unlockedSounds.contains(entry.value);
+
+                            return Column(
+                               children: [
+                                 ListTile(
+                                   leading: entry.value != 'Sessiz' ? IconButton(
+                                     icon: Icon(isLocked ? Icons.lock : Icons.play_circle_fill, color: isLocked ? Colors.grey : Theme.of(context).primaryColor, size: 32),
+                                     onPressed: () async {
+                                       if (isLocked) return;
+                                       try {
+                                         await _previewPlayer.stop();
+                                         String assetPath = entry.value.replaceAll('assets/', '');
+                                         await _previewPlayer.play(kIsWeb ? UrlSource(entry.value) : AssetSource(assetPath));
+                                       } catch (e) {
+                                         debugPrint("Could not play bg preview: $e");
+                                       }
+                                     },
+                                   ) : const SizedBox(width: 48, child: Icon(Icons.volume_off, color: Colors.grey)),
+                                   title: Text(entry.key, style: TextStyle(fontWeight: FontWeight.w500, color: isLocked ? Colors.grey : Colors.black87)),
+                                   trailing: tempSelectedPath == entry.value 
+                                       ? Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor) 
+                                       : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
+                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                   onTap: () {
+                                     if (isLocked) {
+                                       Navigator.of(context).pop();
+                                       setState(() { _bottomNavIndex = 1; });
+                                     } else {
+                                       setDialogState(() {
+                                         tempSelectedPath = entry.value;
+                                       });
+                                     }
+                                   },
+                                   onLongPress: () {
+                                     if (isLocked) {
+                                       Navigator.of(context).pop();
+                                       setState(() { _bottomNavIndex = 1; });
+                                     } else {
+                                       setDialogState(() {
+                                         tempSelectedPath = entry.value;
+                                       });
+                                     }
+                                   },
+                                 ),
+                                 const Divider(),
+                               ],
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
@@ -1107,7 +1159,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                           await _audioPlayer.stop();
                                           await _audioPlayer.setReleaseMode(ReleaseMode.loop);
                                           _currentPlayingAsset = assetPath;
-                                          await _audioPlayer.play(AssetSource(assetPath));
+                                          await _audioPlayer.play(kIsWeb ? UrlSource(tempSelectedPath) : AssetSource(assetPath));
                                       } else {
                                           await _audioPlayer.resume();
                                       }
@@ -1217,9 +1269,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
       if (isSilentMode) return;
       
       String alarmSound = prefs.getString('alarmSound') ?? 'assets/sounds/alarms/dragon-studio-cute-chime-439613.mp3';
+      if (alarmSound == 'Sessiz') return;
       
       String assetPath = alarmSound.replaceAll('assets/', '');
-      Source source = AssetSource(assetPath);
+      Source source = kIsWeb ? UrlSource(alarmSound) : AssetSource(assetPath);
       
       await _alarmPlayer.play(source);
     } catch (e) {
@@ -1743,7 +1796,14 @@ class _PomodoroHomeState extends State<PomodoroHome>
   }
 
   Widget _buildSettingsView() {
-    return SettingsView(key: _settingsKey);
+    return SettingsView(
+      key: _settingsKey,
+      onNavigateToMarket: () {
+        setState(() {
+          _bottomNavIndex = 1; // Market index
+        });
+      },
+    );
   }
 
 
@@ -1780,8 +1840,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
             Center(
               child: Stack(
                 alignment: Alignment.center,
-                clipBehavior: Clip.none, // Allow icons to overlap outside
+                clipBehavior: Clip.none, 
                 children: [
+                   // Base to expand Stack bounds for hit-testing
+                   const SizedBox(width: 380, height: 380),
                    // The Circular Progress Bar Border
                    SizedBox(
                      width: 336, // Slightly larger than the main circle (320 + border thickness * 2)
@@ -2125,16 +2187,16 @@ class _PomodoroHomeState extends State<PomodoroHome>
               ),
 
 
-              // Weather Icon (Bottom Left Arc) - Pushed outward
+              // Weather Icon (Bottom Left Arc) - Placed in the expanded stack bounds
               Positioned(
-                bottom: -20,
-                left: -20,
+                bottom: 2,
+                left: 2,
                 child: IconButton(
                   icon: Icon(
                     _currentWeather == 'snow' ? Icons.ac_unit : _currentWeather == 'rain' ? Icons.water_drop : Icons.wb_sunny_outlined,
                   ),
                   iconSize: 40,
-                  color: Theme.of(context).primaryColor, // Always theme main color
+                  color: Theme.of(context).primaryColor,
                   onPressed: _showWeatherSelectionDialog,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -2142,16 +2204,16 @@ class _PomodoroHomeState extends State<PomodoroHome>
                 ),
               ),
               
-              // Music Icon (Bottom Right Arc) - Pushed outward
+              // Music Icon (Bottom Right Arc) - Placed in the expanded stack bounds
               Positioned(
-                bottom: -20,
-                right: -20,
+                bottom: 2,
+                right: 2,
                 child: IconButton(
                   icon: Icon(
                     _isPlayingMusic ? Icons.music_note_rounded : Icons.music_off_outlined,
                   ),
                   iconSize: 40,
-                  color: Theme.of(context).primaryColor, // Always theme main color
+                  color: Theme.of(context).primaryColor,
                   onPressed: _showMusicSelectionDialog,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -2163,8 +2225,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
             ),
           ),
           
-            
-            const SizedBox(height: 20), // Replaced Flexible Spacer
+            const SizedBox(height: 10), // Adjusted spacing
 
             // --- Timer Display ---
             GestureDetector(
@@ -2375,7 +2436,8 @@ class _PomodoroHomeState extends State<PomodoroHome>
 }
 
 class SettingsView extends StatefulWidget {
-  const SettingsView({super.key});
+  final VoidCallback? onNavigateToMarket;
+  const SettingsView({super.key, this.onNavigateToMarket});
 
   @override
   State<SettingsView> createState() => _SettingsViewState();
@@ -2446,6 +2508,7 @@ class _SettingsViewState extends State<SettingsView> {
     if (_showSound) {
       return SoundView(
         onBack: () => setState(() => _showSound = false),
+        onNavigateToMarket: widget.onNavigateToMarket,
       );
     }
 
@@ -2514,8 +2577,9 @@ class _SettingsViewState extends State<SettingsView> {
 
 class SoundView extends StatefulWidget {
   final VoidCallback onBack;
+  final VoidCallback? onNavigateToMarket;
 
-  const SoundView({super.key, required this.onBack});
+  const SoundView({super.key, required this.onBack, this.onNavigateToMarket});
 
   @override
   State<SoundView> createState() => _SoundViewState();
@@ -2526,6 +2590,7 @@ class _SoundViewState extends State<SoundView> {
   String _alarmSound = 'Announce';
   String _bgMusicPath = 'Sessiz';
   String _breakMusicPath = 'Sessiz';
+  List<String> _unlockedSounds = [];
   final AudioPlayer _audioPlayer = AudioPlayer();
   final AudioPlayer _previewPlayer = AudioPlayer();
 
@@ -2550,16 +2615,13 @@ class _SoundViewState extends State<SoundView> {
         _silentMode = prefs.getBool('silentMode') ?? false;
         _bgMusicPath = prefs.getString('bgMusicPath') ?? 'Sessiz';
         _breakMusicPath = prefs.getString('breakMusicPath') ?? 'Sessiz';
+        _unlockedSounds = prefs.getStringList('purchased_items') ?? [];
       });
     }
   }
 
   void _showAlarmSelectionDialog() {
-    final Map<String, String> sounds = {
-      'Sevimli Çan': 'assets/sounds/alarms/dragon-studio-cute-chime-439613.mp3',
-      'Neşeli Çan': 'assets/sounds/alarms/dragon-studio-festive-chime-439612.mp3',
-      'Göksel Çan (Soft)': 'assets/sounds/alarms/gigidelaromusic-celestial-chime-soft-short-450958.mp3'
-    };
+    final Map<String, String> sounds = alarmMusicOptions;
 
     String tempSelectedPath = _alarmSound;
 
@@ -2584,44 +2646,60 @@ class _SoundViewState extends State<SoundView> {
                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
                      ),
                      const SizedBox(height: 16),
-                     ...sounds.entries.map((entry) {
-                       String soundName = entry.key;
-                       String soundPath = entry.value;
-                       return Column(
-                         children: [
-                           ListTile(
-                             leading: IconButton(
-                               icon: Icon(Icons.play_circle_fill, color: Theme.of(context).primaryColor, size: 32),
-                               onPressed: () async {
-                                 try {
-                                   await _previewPlayer.stop();
-                                   String assetPath = soundPath.replaceAll('assets/', '');
-                                   await _previewPlayer.play(AssetSource(assetPath));
-                                 } catch (e) {
-                                   debugPrint("Could not play preview: $e");
-                                 }
-                               },
-                             ),
-                             title: Text(soundName, style: const TextStyle(fontWeight: FontWeight.w500)),
-                             trailing: tempSelectedPath == soundPath 
-                                 ? Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor) 
-                                 : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
-                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                             onTap: () {
-                               setDialogState(() {
-                                 tempSelectedPath = soundPath;
-                               });
-                             },
-                             onLongPress: () {
-                               setDialogState(() {
-                                 tempSelectedPath = soundPath;
-                               });
-                             },
-                           ),
-                           const Divider(),
-                         ],
-                       );
-                     }),
+                     Flexible(
+                       child: SingleChildScrollView(
+                         child: Column(
+                           children: sounds.entries.map((entry) {
+                             bool isFree = entry.value == 'Sessiz' || entry.value == 'assets/sounds/alarms/dragon-studio-cute-chime-439613.mp3';
+                             bool isLocked = !isFree && !_unlockedSounds.contains(entry.value);
+
+                             return Column(
+                               children: [
+                                 ListTile(
+                                   leading: entry.value != 'Sessiz' ? IconButton(
+                                     icon: Icon(isLocked ? Icons.lock : Icons.play_circle_fill, color: isLocked ? Colors.grey : Theme.of(context).primaryColor, size: 32),
+                                     onPressed: () async {
+                                       if (isLocked) return;
+                                       try {
+                                         await _previewPlayer.stop();
+                                         String assetPath = entry.value.replaceAll('assets/', '');
+                                         await _previewPlayer.play(kIsWeb ? UrlSource(entry.value) : AssetSource(assetPath));
+                                       } catch (e) {
+                                         debugPrint("Could not play alarm preview: $e");
+                                       }
+                                     },
+                                   ) : const SizedBox(width: 48, child: Icon(Icons.volume_off, color: Colors.grey)),
+                                   title: Text(entry.key, style: TextStyle(fontWeight: FontWeight.w500, color: isLocked ? Colors.grey : Colors.black87)),
+                                   trailing: tempSelectedPath == entry.value 
+                                       ? Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor) 
+                                       : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
+                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                   onTap: () {
+                                     if (isLocked) {
+                                       _showLockedItemDialog(entry.key);
+                                     } else {
+                                       setDialogState(() {
+                                         tempSelectedPath = entry.value;
+                                       });
+                                     }
+                                   },
+                                   onLongPress: () {
+                                     if (isLocked) {
+                                       _showLockedItemDialog(entry.key);
+                                     } else {
+                                       setDialogState(() {
+                                         tempSelectedPath = entry.value;
+                                       });
+                                     }
+                                   },
+                                 ),
+                                 const Divider(),
+                               ],
+                             );
+                           }).toList(),
+                         ),
+                       ),
+                     ),
                      const SizedBox(height: 16),
                      SizedBox(
                        width: double.infinity,
@@ -2662,15 +2740,7 @@ class _SoundViewState extends State<SoundView> {
   }
 
   void _showBgMusicSelectionDialog() {
-    final Map<String, String> options = {
-      'Sessiz (Kapat)': 'Sessiz',
-      'Yoğun Yağmur': 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3',
-      'Meditasyon': 'assets/sounds/back/dragon-studio-meditation-music-sound-bite-339735.mp3',
-      'Nehir Sesi': 'assets/sounds/back/dragon-studio-soothing-river-flow-372456.mp3',
-      'Çalışma Müziği (B Minor)': 'assets/sounds/back/freesound_community-study-in-b-minor-75946.mp3',
-      'Kuş Sesleri': 'assets/sounds/back/nils_vega-birds-singing-in-early-summer-359446.mp3',
-      'Hafif Yağmur': 'assets/sounds/back/Rain_Sound_Effect_-_Relaxation_-_Free_Download_-_No_Copyright_320k.mp3',
-    };
+    final Map<String, String> options = backgroundMusicOptions;
 
     String tempSelectedPath = _bgMusicPath;
 
@@ -2693,42 +2763,60 @@ class _SoundViewState extends State<SoundView> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
                     ),
                     const SizedBox(height: 16),
-                    ...options.entries.map((entry) {
-                      return Column(
-                         children: [
-                           ListTile(
-                             leading: entry.value != 'Sessiz' ? IconButton(
-                               icon: Icon(Icons.play_circle_fill, color: Theme.of(context).primaryColor, size: 32),
-                               onPressed: () async {
-                                 try {
-                                   await _previewPlayer.stop();
-                                   String assetPath = entry.value.replaceAll('assets/', '');
-                                   await _previewPlayer.play(AssetSource(assetPath));
-                                 } catch (e) {
-                                   debugPrint("Could not play bg preview: $e");
-                                 }
-                               },
-                             ) : const SizedBox(width: 48, child: Icon(Icons.volume_off, color: Colors.grey)),
-                             title: Text(entry.key, style: const TextStyle(fontWeight: FontWeight.w500)),
-                             trailing: tempSelectedPath == entry.value 
-                                 ? Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor) 
-                                 : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
-                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                             onTap: () {
-                               setDialogState(() {
-                                 tempSelectedPath = entry.value;
-                               });
-                             },
-                             onLongPress: () {
-                               setDialogState(() {
-                                 tempSelectedPath = entry.value;
-                               });
-                             },
-                           ),
-                           const Divider(),
-                         ],
-                      );
-                    }),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: options.entries.map((entry) {
+                            bool isFree = entry.value == 'Sessiz' || entry.value == 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3';
+                            bool isLocked = !isFree && !_unlockedSounds.contains(entry.value);
+
+                            return Column(
+                               children: [
+                                 ListTile(
+                                   leading: entry.value != 'Sessiz' ? IconButton(
+                                     icon: Icon(isLocked ? Icons.lock : Icons.play_circle_fill, color: isLocked ? Colors.grey : Theme.of(context).primaryColor, size: 32),
+                                     onPressed: () async {
+                                       if (isLocked) return;
+                                       try {
+                                         await _previewPlayer.stop();
+                                         String assetPath = entry.value.replaceAll('assets/', '');
+                                         await _previewPlayer.play(kIsWeb ? UrlSource(entry.value) : AssetSource(assetPath));
+                                       } catch (e) {
+                                         debugPrint("Could not play bg preview: $e");
+                                       }
+                                     },
+                                   ) : const SizedBox(width: 48, child: Icon(Icons.volume_off, color: Colors.grey)),
+                                   title: Text(entry.key, style: TextStyle(fontWeight: FontWeight.w500, color: isLocked ? Colors.grey : Colors.black87)),
+                                   trailing: tempSelectedPath == entry.value 
+                                       ? Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor) 
+                                       : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
+                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                   onTap: () {
+                                     if (isLocked) {
+                                       _showLockedItemDialog(entry.key);
+                                     } else {
+                                       setDialogState(() {
+                                         tempSelectedPath = entry.value;
+                                       });
+                                     }
+                                   },
+                                   onLongPress: () {
+                                     if (isLocked) {
+                                       _showLockedItemDialog(entry.key);
+                                     } else {
+                                       setDialogState(() {
+                                         tempSelectedPath = entry.value;
+                                       });
+                                     }
+                                   },
+                                 ),
+                                 const Divider(),
+                               ],
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
@@ -2769,15 +2857,7 @@ class _SoundViewState extends State<SoundView> {
   }
 
   void _showBreakMusicSelectionDialog() {
-    final Map<String, String> options = {
-      'Sessiz (Kapat)': 'Sessiz',
-      'Yoğun Yağmur': 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3',
-      'Meditasyon': 'assets/sounds/back/dragon-studio-meditation-music-sound-bite-339735.mp3',
-      'Nehir Sesi': 'assets/sounds/back/dragon-studio-soothing-river-flow-372456.mp3',
-      'Çalışma Müziği (B Minor)': 'assets/sounds/back/freesound_community-study-in-b-minor-75946.mp3',
-      'Kuş Sesleri': 'assets/sounds/back/nils_vega-birds-singing-in-early-summer-359446.mp3',
-      'Hafif Yağmur': 'assets/sounds/back/Rain_Sound_Effect_-_Relaxation_-_Free_Download_-_No_Copyright_320k.mp3',
-    };
+    final Map<String, String> options = backgroundMusicOptions;
 
     String tempSelectedPath = _breakMusicPath;
 
@@ -2800,42 +2880,60 @@ class _SoundViewState extends State<SoundView> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
                     ),
                     const SizedBox(height: 16),
-                    ...options.entries.map((entry) {
-                      return Column(
-                         children: [
-                           ListTile(
-                             leading: entry.value != 'Sessiz' ? IconButton(
-                               icon: Icon(Icons.play_circle_fill, color: Theme.of(context).primaryColor, size: 32),
-                               onPressed: () async {
-                                 try {
-                                   await _previewPlayer.stop();
-                                   String assetPath = entry.value.replaceAll('assets/', '');
-                                   await _previewPlayer.play(AssetSource(assetPath));
-                                 } catch (e) {
-                                   debugPrint("Could not play break preview: $e");
-                                 }
-                               },
-                             ) : const SizedBox(width: 48, child: Icon(Icons.volume_off, color: Colors.grey)),
-                             title: Text(entry.key, style: const TextStyle(fontWeight: FontWeight.w500)),
-                             trailing: tempSelectedPath == entry.value 
-                                 ? Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor) 
-                                 : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
-                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                             onTap: () {
-                               setDialogState(() {
-                                 tempSelectedPath = entry.value;
-                               });
-                             },
-                             onLongPress: () {
-                               setDialogState(() {
-                                 tempSelectedPath = entry.value;
-                               });
-                             },
-                           ),
-                           const Divider(),
-                         ],
-                      );
-                    }),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: options.entries.map((entry) {
+                            bool isFree = entry.value == 'Sessiz' || entry.value == 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3';
+                            bool isLocked = !isFree && !_unlockedSounds.contains(entry.value);
+
+                            return Column(
+                               children: [
+                                 ListTile(
+                                   leading: entry.value != 'Sessiz' ? IconButton(
+                                     icon: Icon(isLocked ? Icons.lock : Icons.play_circle_fill, color: isLocked ? Colors.grey : Theme.of(context).primaryColor, size: 32),
+                                     onPressed: () async {
+                                       if (isLocked) return;
+                                       try {
+                                         await _previewPlayer.stop();
+                                         String assetPath = entry.value.replaceAll('assets/', '');
+                                         await _previewPlayer.play(kIsWeb ? UrlSource(entry.value) : AssetSource(assetPath));
+                                       } catch (e) {
+                                         debugPrint("Could not play break preview: $e");
+                                       }
+                                     },
+                                   ) : const SizedBox(width: 48, child: Icon(Icons.volume_off, color: Colors.grey)),
+                                   title: Text(entry.key, style: TextStyle(fontWeight: FontWeight.w500, color: isLocked ? Colors.grey : Colors.black87)),
+                                   trailing: tempSelectedPath == entry.value 
+                                       ? Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor) 
+                                       : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
+                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                   onTap: () {
+                                     if (isLocked) {
+                                       _showLockedItemDialog(entry.key);
+                                     } else {
+                                       setDialogState(() {
+                                         tempSelectedPath = entry.value;
+                                       });
+                                     }
+                                   },
+                                   onLongPress: () {
+                                     if (isLocked) {
+                                       _showLockedItemDialog(entry.key);
+                                     } else {
+                                       setDialogState(() {
+                                         tempSelectedPath = entry.value;
+                                       });
+                                     }
+                                   },
+                                 ),
+                                 const Divider(),
+                               ],
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
@@ -2873,6 +2971,51 @@ class _SoundViewState extends State<SoundView> {
     ).then((_) {
       _previewPlayer.stop();
     });
+  }
+
+  void _showLockedItemDialog(String itemName) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            'Kilitli Ses',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            'Lütfen bu sesi (\'$itemName\') kullanabilmek için Mağaza (Market) bölümünden satın alın.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 16),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.grey.shade800),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Kapat', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop(); // Close settings/sound views back to main screen
+                widget.onNavigateToMarket?.call();
+              },
+              child: const Text('Mağazaya Git', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      }
+    );
   }
 
   Widget _buildGroupedSettingsItem({
@@ -2973,13 +3116,7 @@ class _SoundViewState extends State<SoundView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _bgMusicPath == 'Sessiz' ? 'Sessiz (Kapat)' :
-                          _bgMusicPath == 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3' ? 'Yoğun Yağmur' :
-                          _bgMusicPath == 'assets/sounds/back/dragon-studio-meditation-music-sound-bite-339735.mp3' ? 'Meditasyon' :
-                          _bgMusicPath == 'assets/sounds/back/dragon-studio-soothing-river-flow-372456.mp3' ? 'Nehir Sesi' :
-                          _bgMusicPath == 'assets/sounds/back/freesound_community-study-in-b-minor-75946.mp3' ? 'Çalışma Müziği (B Minor)' :
-                          _bgMusicPath == 'assets/sounds/back/nils_vega-birds-singing-in-early-summer-359446.mp3' ? 'Kuş Sesleri' :
-                          _bgMusicPath == 'assets/sounds/back/Rain_Sound_Effect_-_Relaxation_-_Free_Download_-_No_Copyright_320k.mp3' ? 'Hafif Yağmur' : 'Sessiz',
+                          getMusicNameFromPath(_bgMusicPath),
                           style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 16)
                         ),
                         const SizedBox(width: 4),
@@ -2995,13 +3132,7 @@ class _SoundViewState extends State<SoundView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _breakMusicPath == 'Sessiz' ? 'Sessiz (Kapat)' :
-                          _breakMusicPath == 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3' ? 'Yoğun Yağmur' :
-                          _breakMusicPath == 'assets/sounds/back/dragon-studio-meditation-music-sound-bite-339735.mp3' ? 'Meditasyon' :
-                          _breakMusicPath == 'assets/sounds/back/dragon-studio-soothing-river-flow-372456.mp3' ? 'Nehir Sesi' :
-                          _breakMusicPath == 'assets/sounds/back/freesound_community-study-in-b-minor-75946.mp3' ? 'Çalışma Müziği (B Minor)' :
-                          _breakMusicPath == 'assets/sounds/back/nils_vega-birds-singing-in-early-summer-359446.mp3' ? 'Kuş Sesleri' :
-                          _breakMusicPath == 'assets/sounds/back/Rain_Sound_Effect_-_Relaxation_-_Free_Download_-_No_Copyright_320k.mp3' ? 'Hafif Yağmur' : 'Sessiz',
+                          getMusicNameFromPath(_breakMusicPath),
                           style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 16)
                         ),
                         const SizedBox(width: 4),
@@ -3017,9 +3148,7 @@ class _SoundViewState extends State<SoundView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _alarmSound == 'assets/sounds/alarms/dragon-studio-cute-chime-439613.mp3' ? 'Sevimli Çan' :
-                          _alarmSound == 'assets/sounds/alarms/dragon-studio-festive-chime-439612.mp3' ? 'Neşeli Çan' :
-                          _alarmSound == 'assets/sounds/alarms/gigidelaromusic-celestial-chime-soft-short-450958.mp3' ? 'Göksel Çan (Soft)' : 'Sevimli Çan',
+                          getAlarmNameFromPath(_alarmSound),
                           style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 16)
                         ),
                         const SizedBox(width: 4),
