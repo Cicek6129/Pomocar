@@ -1808,7 +1808,9 @@ class _PomodoroHomeState extends State<PomodoroHome>
 
 
   Widget _buildTimerView() {
-    return GestureDetector(
+    final bool isJaponTheme = themeSettings.activeColorTheme == 'Japon';
+    
+    Widget timerContent = GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
@@ -2187,37 +2189,49 @@ class _PomodoroHomeState extends State<PomodoroHome>
               ),
 
 
-              // Weather Icon (Bottom Left Arc) - Placed in the expanded stack bounds
+              // Weather Icon (Bottom Left Arc) - Soft background for visibility
               Positioned(
                 bottom: 2,
                 left: 2,
-                child: IconButton(
-                  icon: Icon(
-                    _currentWeather == 'snow' ? Icons.ac_unit : _currentWeather == 'rain' ? Icons.water_drop : Icons.wb_sunny_outlined,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    shape: BoxShape.circle,
                   ),
-                  iconSize: 40,
-                  color: Theme.of(context).primaryColor,
-                  onPressed: _showWeatherSelectionDialog,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  splashRadius: 30,
+                  child: IconButton(
+                    icon: Icon(
+                      _currentWeather == 'snow' ? Icons.ac_unit : _currentWeather == 'rain' ? Icons.water_drop : Icons.wb_sunny_outlined,
+                    ),
+                    iconSize: 40,
+                    color: Theme.of(context).primaryColor,
+                    onPressed: _showWeatherSelectionDialog,
+                    padding: const EdgeInsets.all(8.0),
+                    constraints: const BoxConstraints(),
+                    splashRadius: 30,
+                  ),
                 ),
               ),
               
-              // Music Icon (Bottom Right Arc) - Placed in the expanded stack bounds
+              // Music Icon (Bottom Right Arc) - Soft background for visibility
               Positioned(
                 bottom: 2,
                 right: 2,
-                child: IconButton(
-                  icon: Icon(
-                    _isPlayingMusic ? Icons.music_note_rounded : Icons.music_off_outlined,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    shape: BoxShape.circle,
                   ),
-                  iconSize: 40,
-                  color: Theme.of(context).primaryColor,
-                  onPressed: _showMusicSelectionDialog,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  splashRadius: 30,
+                  child: IconButton(
+                    icon: Icon(
+                      _isPlayingMusic ? Icons.music_note_rounded : Icons.music_off_outlined,
+                    ),
+                    iconSize: 40,
+                    color: Theme.of(context).primaryColor,
+                    onPressed: _showMusicSelectionDialog,
+                    padding: const EdgeInsets.all(8.0),
+                    constraints: const BoxConstraints(),
+                    splashRadius: 30,
+                  ),
                 ),
               ),
 
@@ -2256,7 +2270,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
             // --- Center Action Area (Dynamic States - Unified Pill) ---
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                color: isJaponTheme ? Colors.white.withValues(alpha: 0.6) : Theme.of(context).primaryColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(50), // Stadium shape
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -2348,6 +2362,25 @@ class _PomodoroHomeState extends State<PomodoroHome>
         ),
       ),
     );
+
+    if (isJaponTheme) {
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          // Full-screen Japanese background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/backgrounds/japan_bg.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Timer content on top
+          timerContent,
+        ],
+      );
+    }
+
+    return timerContent;
   }
 
   Widget _buildShopView() {

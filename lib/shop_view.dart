@@ -167,12 +167,12 @@ final List<ShopItem> allShopItems = [
     ShopItem(id: 'assets/sounds/alarms/gigidelaromusic-celestial-chime-soft-short-450958.mp3', category: 'alarm', name: 'Göksel Çan', price: 80, icon: Icons.auto_awesome, color: Colors.cyan),
 
     // Temalar
-    ShopItem(id: 'Japon', category: 'tema', name: 'Japon Teması', price: 100, icon: Icons.landscape, color: Colors.pink, isWide: true),
-    ShopItem(id: 'Mısır', category: 'tema', name: 'Mısır Teması', price: 100, icon: Icons.wb_sunny, color: Colors.amber, isWide: true),
-    ShopItem(id: 'Mor', category: 'tema', name: 'Mor Tema', price: 50, icon: Icons.color_lens, color: Colors.purple, isWide: true),
-    ShopItem(id: 'Mavi', category: 'tema', name: 'Mavi Tema', price: 50, icon: Icons.color_lens, color: Colors.blue, isWide: true),
-    ShopItem(id: 'Yeşil', category: 'tema', name: 'Yeşil Tema', price: 50, icon: Icons.color_lens, color: Colors.green, isWide: true),
-    ShopItem(id: 'Turuncu', category: 'tema', name: 'Turuncu Tema', price: 50, icon: Icons.color_lens, color: Colors.orange, isWide: true),
+    ShopItem(id: 'Japon', category: 'tema', name: 'Japon Teması', price: 100, imagePath: 'assets/backgrounds/japan_bg.png', color: Colors.pink, isWide: false),
+    ShopItem(id: 'Mısır', category: 'tema', name: 'Mısır Teması', price: 100, icon: Icons.wb_sunny, color: Colors.amber, isWide: false),
+    ShopItem(id: 'Mor', category: 'tema', name: 'Mor Tema', price: 50, icon: Icons.color_lens, color: Colors.purple, isWide: false),
+    ShopItem(id: 'Mavi', category: 'tema', name: 'Mavi Tema', price: 50, icon: Icons.color_lens, color: Colors.blue, isWide: false),
+    ShopItem(id: 'Yeşil', category: 'tema', name: 'Yeşil Tema', price: 50, icon: Icons.color_lens, color: Colors.green, isWide: false),
+    ShopItem(id: 'Turuncu', category: 'tema', name: 'Turuncu Tema', price: 50, icon: Icons.color_lens, color: Colors.orange, isWide: false),
   ];
 
 class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin {
@@ -480,15 +480,26 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
                       alignment: Alignment.center,
                       children: [
                           if (item.imagePath != null)
-                             Padding(
-                               padding: const EdgeInsets.all(4.0),
-                               child: Center(
-                                 child: Transform.scale(
-                                   scale: item.imageScale,
-                                   child: Image.asset(item.imagePath!, height: 90, width: double.infinity, fit: BoxFit.contain)
-                                 ),
-                               ),
-                             )
+                             item.category == 'tema'
+                               ? ClipRRect(
+                                   borderRadius: BorderRadius.circular(24),
+                                   child: Image.asset(
+                                     item.imagePath!,
+                                     height: double.infinity,
+                                     width: double.infinity,
+                                     fit: BoxFit.cover,
+                                     alignment: Alignment.bottomCenter,
+                                   ),
+                                 )
+                               : Padding(
+                                   padding: const EdgeInsets.all(4.0),
+                                   child: Center(
+                                     child: Transform.scale(
+                                       scale: item.imageScale,
+                                       child: Image.asset(item.imagePath!, height: 90, width: double.infinity, fit: BoxFit.contain)
+                                     ),
+                                   ),
+                                 )
                           else if (item.icon != null)
                              Center(child: Icon(item.icon, size: item.isWide ? 64 : 48, color: item.color)),
                           if (isMusic)
