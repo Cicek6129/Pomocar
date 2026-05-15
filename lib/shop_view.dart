@@ -168,9 +168,9 @@ final List<ShopItem> allShopItems = [
 
     // Temalar
     ShopItem(id: 'Japon', category: 'tema', name: 'Japon Teması', price: 100, imagePath: 'assets/backgrounds/japan_bg.png', color: Colors.pink, isWide: false),
-    ShopItem(id: 'Mısır', category: 'tema', name: 'Mısır Teması', price: 100, icon: Icons.wb_sunny, color: Colors.amber, isWide: false),
-    ShopItem(id: 'Mor', category: 'tema', name: 'Mor Tema', price: 50, icon: Icons.color_lens, color: Colors.purple, isWide: false),
-    ShopItem(id: 'Mavi', category: 'tema', name: 'Mavi Tema', price: 50, icon: Icons.color_lens, color: Colors.blue, isWide: false),
+    ShopItem(id: 'Mısır', category: 'tema', name: 'Mısır Teması', price: 100, imagePath: 'assets/backgrounds/egypt_bg.png', color: Colors.amber, isWide: false),
+    ShopItem(id: 'İskandinavya', category: 'tema', name: 'İskandinavya Teması', price: 50, imagePath: 'assets/backgrounds/scandinavia_bg.png', color: Colors.cyan, isWide: false),
+    ShopItem(id: 'Derin Uzay', category: 'tema', name: 'Derin Uzay Teması', price: 50, imagePath: 'assets/backgrounds/space_bg.png', color: Colors.indigo, isWide: false),
     ShopItem(id: 'Yeşil', category: 'tema', name: 'Yeşil Tema', price: 50, icon: Icons.color_lens, color: Colors.green, isWide: false),
     ShopItem(id: 'Turuncu', category: 'tema', name: 'Turuncu Tema', price: 50, icon: Icons.color_lens, color: Colors.orange, isWide: false),
   ];
@@ -205,8 +205,26 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
 
   Future<void> _loadState() async {
     final prefs = await SharedPreferences.getInstance();
+    final purchased = prefs.getStringList('purchased_items') ?? [];
+    if (purchased.contains('Mor') && !purchased.contains('İskandinavya')) {
+      purchased[purchased.indexOf('Mor')] = 'İskandinavya';
+      await prefs.setStringList('purchased_items', purchased);
+    }
+    if (purchased.contains('Mavi') && !purchased.contains('Derin Uzay')) {
+      purchased[purchased.indexOf('Mavi')] = 'Derin Uzay';
+      await prefs.setStringList('purchased_items', purchased);
+    }
+    var equippedTheme = prefs.getString('theme_color_key') ?? 'Varsayılan';
+    if (equippedTheme == 'Mor') {
+      equippedTheme = 'İskandinavya';
+      await prefs.setString('theme_color_key', equippedTheme);
+    }
+    if (equippedTheme == 'Mavi') {
+      equippedTheme = 'Derin Uzay';
+      await prefs.setString('theme_color_key', equippedTheme);
+    }
     setState(() {
-      _purchasedItems = prefs.getStringList('purchased_items') ?? [];
+      _purchasedItems = purchased;
       
       unlockedTrees = prefs.getStringList('unlocked_trees') ?? ['tree1', 'tree2', 'tree3'];
       equippedTrees = prefs.getStringList('equipped_trees') ?? ['tree1', 'tree2', 'tree3'];
@@ -218,7 +236,7 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
       _equippedItems['garaj'] = prefs.getString('equipped_garaj') ?? 'car1';
       _equippedItems['yol'] = prefs.getString('equipped_yol') ?? 'default';
       _equippedItems['teyp'] = prefs.getString('equipped_teyp') ?? 'default';
-      _equippedItems['tema'] = prefs.getString('theme_color_key') ?? 'Varsayılan';
+      _equippedItems['tema'] = equippedTheme;
     });
   }
 

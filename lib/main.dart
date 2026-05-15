@@ -15,6 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'notification_service.dart';
 import 'shop_view.dart';
+import 'space_bottom_nav.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -213,56 +214,30 @@ class ThemeSettingsController extends ChangeNotifier {
     fontFamily: 'Roboto',
   );
 
-  // Mor (Purple)
-  static final ThemeData purpleDarkTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFF673AB7),
-    primaryColor: const Color(0xFF9C27B0),
-    cardColor: const Color(0xFF311B92),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.white70),
-      bodyMedium: TextStyle(color: Colors.white70),
-    ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF9C27B0), brightness: Brightness.dark),
-    useMaterial3: true,
-    fontFamily: 'Roboto',
-  );
-
-  static final ThemeData purpleLightTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFFE1BEE7),
-    primaryColor: const Color(0xFF9C27B0),
-    cardColor: const Color(0xFFF3E5F5),
+  // İskandinavya
+  static final ThemeData iskandinavyaTheme = ThemeData(
+    scaffoldBackgroundColor: const Color(0xFFE0F7FA),
+    primaryColor: const Color(0xFF00ACC1),
+    cardColor: const Color(0xFFB2EBF2),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: Colors.black87),
       bodyMedium: TextStyle(color: Colors.black87),
     ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF9C27B0), brightness: Brightness.light),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF00ACC1), brightness: Brightness.light),
     useMaterial3: true,
     fontFamily: 'Roboto',
   );
 
-  // Mavi (Blue)
-  static final ThemeData blueDarkTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFF1976D2),
-    primaryColor: const Color(0xFF2196F3),
-    cardColor: const Color(0xFF0D47A1),
+  // Derin Uzay
+  static final ThemeData derinUzayTheme = ThemeData(
+    scaffoldBackgroundColor: const Color(0xFF0A1628),
+    primaryColor: const Color(0xFF00E5FF),
+    cardColor: const Color(0xFF1A2744),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: Colors.white70),
       bodyMedium: TextStyle(color: Colors.white70),
     ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2196F3), brightness: Brightness.dark),
-    useMaterial3: true,
-    fontFamily: 'Roboto',
-  );
-
-  static final ThemeData blueLightTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFFBBDEFB),
-    primaryColor: const Color(0xFF2196F3),
-    cardColor: const Color(0xFFE3F2FD),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.black87),
-      bodyMedium: TextStyle(color: Colors.black87),
-    ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2196F3), brightness: Brightness.light),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF00E5FF), brightness: Brightness.dark),
     useMaterial3: true,
     fontFamily: 'Roboto',
   );
@@ -364,7 +339,11 @@ class ThemeSettingsController extends ChangeNotifier {
       isDarkMode = true;
       activeColorTheme = 'Varsayılan';
     } else {
-      activeColorTheme = savedTheme;
+      activeColorTheme = switch (savedTheme) {
+        'Mor' => 'İskandinavya',
+        'Mavi' => 'Derin Uzay',
+        _ => savedTheme,
+      };
       isDarkMode = prefs.getBool('is_dark_mode') ?? false;
     }
     
@@ -389,10 +368,10 @@ class ThemeSettingsController extends ChangeNotifier {
     // Static themes ignore dark mode
     if (activeColorTheme == 'Japon') return japonTheme;
     if (activeColorTheme == 'Mısır') return misirTheme;
+    if (activeColorTheme == 'İskandinavya') return iskandinavyaTheme;
+    if (activeColorTheme == 'Derin Uzay') return derinUzayTheme;
 
     switch (activeColorTheme) {
-      case 'Mor': return isDarkMode ? purpleDarkTheme : purpleLightTheme;
-      case 'Mavi': return isDarkMode ? blueDarkTheme : blueLightTheme;
       case 'Yeşil': return isDarkMode ? greenDarkTheme : greenLightTheme;
       case 'Turuncu': return isDarkMode ? orangeDarkTheme : orangeLightTheme;
       case 'Varsayılan':
@@ -1808,7 +1787,14 @@ class _PomodoroHomeState extends State<PomodoroHome>
 
 
   Widget _buildTimerView() {
-    final bool isJaponTheme = themeSettings.activeColorTheme == 'Japon';
+    final String? themeBackgroundPath = switch (themeSettings.activeColorTheme) {
+      'Japon' => 'assets/backgrounds/japan_bg.png',
+      'Mısır' => 'assets/backgrounds/egypt_bg.png',
+      'İskandinavya' => 'assets/backgrounds/scandinavia_bg.png',
+      'Derin Uzay' => 'assets/backgrounds/space_bg.png',
+      _ => null,
+    };
+    final bool hasThemeBackground = themeBackgroundPath != null;
     
     Widget timerContent = GestureDetector(
       onTap: () {
@@ -2270,7 +2256,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
             // --- Center Action Area (Dynamic States - Unified Pill) ---
             Container(
               decoration: BoxDecoration(
-                color: isJaponTheme ? Colors.white.withValues(alpha: 0.6) : Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                color: hasThemeBackground ? Colors.white.withValues(alpha: 0.6) : Theme.of(context).primaryColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(50), // Stadium shape
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -2363,18 +2349,16 @@ class _PomodoroHomeState extends State<PomodoroHome>
       ),
     );
 
-    if (isJaponTheme) {
+    if (themeBackgroundPath != null) {
       return Stack(
         fit: StackFit.expand,
         children: [
-          // Full-screen Japanese background image
           Positioned.fill(
             child: Image.asset(
-              'assets/backgrounds/japan_bg.png',
+              themeBackgroundPath,
               fit: BoxFit.cover,
             ),
           ),
-          // Timer content on top
           timerContent,
         ],
       );
@@ -2412,10 +2396,57 @@ class _PomodoroHomeState extends State<PomodoroHome>
     );
   }
 
+  Widget _buildStandardBottomNav() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.1) ?? Colors.black12, width: 1)),
+      ),
+      child: BottomNavigationBar(
+        currentIndex: _bottomNavIndex,
+        onTap: _onBottomNavTapped,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        selectedItemColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.5) ?? Colors.grey,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0,
+        type: BottomNavigationBarType.fixed,
+        iconSize: 28,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.timer_outlined),
+            activeIcon: Icon(Icons.timer),
+            label: 'Zamanlayıcı',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.store_outlined),
+            activeIcon: Icon(Icons.store),
+            label: 'Market',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month_outlined),
+            activeIcon: Icon(Icons.calendar_month),
+            label: 'İstatistikler',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_outlined),
+            activeIcon: Icon(Icons.settings),
+            label: 'Ayarlar',
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final bool isDerinUzayTheme = themeSettings.activeColorTheme == 'Derin Uzay';
+
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor, 
+      extendBody: isDerinUzayTheme,
+      backgroundColor: isDerinUzayTheme
+          ? const Color(0xFF0A1628)
+          : Theme.of(context).scaffoldBackgroundColor,
       body: IndexedStack(
         index: _bottomNavIndex,
         children: [
@@ -2425,45 +2456,16 @@ class _PomodoroHomeState extends State<PomodoroHome>
           _buildSettingsView(),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.1) ?? Colors.black12, width: 1)),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _bottomNavIndex,
-          onTap: _onBottomNavTapped,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor, 
-          selectedItemColor: Theme.of(context).primaryColor, 
-          unselectedItemColor: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.5) ?? Colors.grey, 
-          showSelectedLabels: false, // Minimalist (No text)
-          showUnselectedLabels: false, // Minimalist (No text)
-          elevation: 0,
-          type: BottomNavigationBarType.fixed,
-          iconSize: 28,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.timer_outlined),
-              activeIcon: Icon(Icons.timer),
-              label: 'Zamanlayıcı',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.store_outlined),
-              activeIcon: Icon(Icons.store),
-              label: 'Market',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month_outlined),
-              activeIcon: Icon(Icons.calendar_month),
-              label: 'İstatistikler',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings_outlined),
-              activeIcon: Icon(Icons.settings),
-              label: 'Ayarlar',
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: isDerinUzayTheme
+          ? MediaQuery.removePadding(
+              context: context,
+              removeBottom: true,
+              child: SpaceBottomNavBar(
+                currentIndex: _bottomNavIndex,
+                onTap: _onBottomNavTapped,
+              ),
+            )
+          : _buildStandardBottomNav(),
     );
   }
 }
@@ -3770,22 +3772,22 @@ class _ThemeViewState extends State<ThemeView> {
                     cardColor: const Color(0xFFFFECB3),
                   ),
 
-                  // Mor Theme
+                  // İskandinavya Theme
                   _buildThemeCard(
-                    title: 'Mor',
-                    bgColor: const Color(0xFF673AB7),
-                    appColor: const Color(0xFF9C27B0),
-                    textColor: Colors.white70,
-                    cardColor: const Color(0xFF311B92),
+                    title: 'İskandinavya',
+                    bgColor: const Color(0xFFE0F7FA),
+                    appColor: const Color(0xFF00ACC1),
+                    textColor: Colors.black87,
+                    cardColor: const Color(0xFFB2EBF2),
                   ),
 
-                  // Mavi Theme
+                  // Derin Uzay Theme
                   _buildThemeCard(
-                    title: 'Mavi',
-                    bgColor: const Color(0xFF1976D2),
-                    appColor: const Color(0xFF2196F3),
+                    title: 'Derin Uzay',
+                    bgColor: const Color(0xFF0A1628),
+                    appColor: const Color(0xFF00E5FF),
                     textColor: Colors.white70,
-                    cardColor: const Color(0xFF0D47A1),
+                    cardColor: const Color(0xFF1A2744),
                   ),
 
                   // Yeşil Theme
