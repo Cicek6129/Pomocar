@@ -323,6 +323,19 @@ class ThemeSettingsController extends ChangeNotifier {
     fontFamily: 'Roboto',
   );
 
+  static final ThemeData machuPicchuTheme = ThemeData(
+    scaffoldBackgroundColor: const Color(0xFFE8F5E9),
+    primaryColor: const Color(0xFF2E7D32),
+    cardColor: const Color(0xFFC8E6C9),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Colors.black87),
+      bodyMedium: TextStyle(color: Colors.black87),
+    ),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32), brightness: Brightness.light),
+    useMaterial3: true,
+    fontFamily: 'Roboto',
+  );
+
   ThemeSettingsController() {
     _loadTheme();
   }
@@ -368,6 +381,7 @@ class ThemeSettingsController extends ChangeNotifier {
     // Static themes ignore dark mode
     if (activeColorTheme == 'Japon') return japonTheme;
     if (activeColorTheme == 'Mısır') return misirTheme;
+    if (activeColorTheme == 'Machu Picchu') return machuPicchuTheme;
     if (activeColorTheme == 'İskandinavya') return iskandinavyaTheme;
     if (activeColorTheme == 'Derin Uzay') return derinUzayTheme;
 
@@ -1790,6 +1804,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
     final String? themeBackgroundPath = switch (themeSettings.activeColorTheme) {
       'Japon' => 'assets/backgrounds/japan_bg.png',
       'Mısır' => 'assets/backgrounds/egypt_bg.png',
+      'Machu Picchu' => 'assets/backgrounds/machu_picchu_bg.png',
       'İskandinavya' => 'assets/backgrounds/scandinavia_bg.png',
       'Derin Uzay' => 'assets/backgrounds/space_bg.png',
       _ => null,
@@ -3770,6 +3785,15 @@ class _ThemeViewState extends State<ThemeView> {
                     appColor: const Color(0xFFFFC107),
                     textColor: Colors.black87,
                     cardColor: const Color(0xFFFFECB3),
+                  ),
+
+                  // Machu Picchu Theme
+                  _buildThemeCard(
+                    title: 'Machu Picchu',
+                    bgColor: const Color(0xFFE8F5E9),
+                    appColor: const Color(0xFF2E7D32),
+                    textColor: Colors.black87,
+                    cardColor: const Color(0xFFC8E6C9),
                   ),
 
                   // İskandinavya Theme

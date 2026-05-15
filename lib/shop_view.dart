@@ -169,6 +169,7 @@ final List<ShopItem> allShopItems = [
     // Temalar
     ShopItem(id: 'Japon', category: 'tema', name: 'Japon Teması', price: 100, imagePath: 'assets/backgrounds/japan_bg.png', color: Colors.pink, isWide: false),
     ShopItem(id: 'Mısır', category: 'tema', name: 'Mısır Teması', price: 100, imagePath: 'assets/backgrounds/egypt_bg.png', color: Colors.amber, isWide: false),
+    ShopItem(id: 'Machu Picchu', category: 'tema', name: 'Machu Picchu Teması', price: 100, imagePath: 'assets/backgrounds/machu_picchu_bg.png', color: Colors.green, isWide: false),
     ShopItem(id: 'İskandinavya', category: 'tema', name: 'İskandinavya Teması', price: 50, imagePath: 'assets/backgrounds/scandinavia_bg.png', color: Colors.cyan, isWide: false),
     ShopItem(id: 'Derin Uzay', category: 'tema', name: 'Derin Uzay Teması', price: 50, imagePath: 'assets/backgrounds/space_bg.png', color: Colors.indigo, isWide: false),
     ShopItem(id: 'Yeşil', category: 'tema', name: 'Yeşil Tema', price: 50, icon: Icons.color_lens, color: Colors.green, isWide: false),
