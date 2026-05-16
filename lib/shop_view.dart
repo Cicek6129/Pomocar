@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'plain_color_themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -172,8 +173,17 @@ final List<ShopItem> allShopItems = [
     ShopItem(id: 'Machu Picchu', category: 'tema', name: 'Machu Picchu Teması', price: 100, imagePath: 'assets/backgrounds/machu_picchu_bg.png', color: Colors.green, isWide: false),
     ShopItem(id: 'İskandinavya', category: 'tema', name: 'İskandinavya Teması', price: 50, imagePath: 'assets/backgrounds/scandinavia_bg.png', color: Colors.cyan, isWide: false),
     ShopItem(id: 'Derin Uzay', category: 'tema', name: 'Derin Uzay Teması', price: 50, imagePath: 'assets/backgrounds/space_bg.png', color: Colors.indigo, isWide: false),
-    ShopItem(id: 'Yeşil', category: 'tema', name: 'Yeşil Tema', price: 50, icon: Icons.color_lens, color: Colors.green, isWide: false),
-    ShopItem(id: 'Turuncu', category: 'tema', name: 'Turuncu Tema', price: 50, icon: Icons.color_lens, color: Colors.orange, isWide: false),
+    ...plainColorThemes.map(
+      (t) => ShopItem(
+        id: t.id,
+        category: 'tema',
+        name: t.shopName,
+        price: t.price,
+        icon: Icons.color_lens,
+        color: t.primary,
+        isWide: false,
+      ),
+    ),
   ];
 
 class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin {

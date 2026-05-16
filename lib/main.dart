@@ -18,6 +18,9 @@ import 'shop_view.dart';
 import 'space_bottom_nav.dart';
 import 'japan_bottom_nav.dart';
 import 'misir_bottom_nav.dart';
+import 'iskandinavya_bottom_nav.dart';
+import 'machu_picchu_bottom_nav.dart';
+import 'plain_color_themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -244,60 +247,6 @@ class ThemeSettingsController extends ChangeNotifier {
     fontFamily: 'Roboto',
   );
 
-  // Yeşil (Green)
-  static final ThemeData greenDarkTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFF388E3C),
-    primaryColor: const Color(0xFF4CAF50),
-    cardColor: const Color(0xFF1B5E20),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.white70),
-      bodyMedium: TextStyle(color: Colors.white70),
-    ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4CAF50), brightness: Brightness.dark),
-    useMaterial3: true,
-    fontFamily: 'Roboto',
-  );
-
-  static final ThemeData greenLightTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFFC8E6C9),
-    primaryColor: const Color(0xFF4CAF50),
-    cardColor: const Color(0xFFE8F5E9),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.black87),
-      bodyMedium: TextStyle(color: Colors.black87),
-    ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4CAF50), brightness: Brightness.light),
-    useMaterial3: true,
-    fontFamily: 'Roboto',
-  );
-
-  // Turuncu (Orange)
-  static final ThemeData orangeDarkTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFFF57C00),
-    primaryColor: const Color(0xFFFF9800),
-    cardColor: const Color(0xFFE65100),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.white70),
-      bodyMedium: TextStyle(color: Colors.white70),
-    ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFF9800), brightness: Brightness.dark),
-    useMaterial3: true,
-    fontFamily: 'Roboto',
-  );
-
-  static final ThemeData orangeLightTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xFFFFE0B2),
-    primaryColor: const Color(0xFFFF9800),
-    cardColor: const Color(0xFFFFF3E0),
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: Colors.black87),
-      bodyMedium: TextStyle(color: Colors.black87),
-    ),
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFF9800), brightness: Brightness.light),
-    useMaterial3: true,
-    fontFamily: 'Roboto',
-  );
-
   // Japon and Mısır
   static final ThemeData japonTheme = ThemeData(
     scaffoldBackgroundColor: const Color(0xFFFCE4EC),
@@ -387,9 +336,12 @@ class ThemeSettingsController extends ChangeNotifier {
     if (activeColorTheme == 'İskandinavya') return iskandinavyaTheme;
     if (activeColorTheme == 'Derin Uzay') return derinUzayTheme;
 
+    final plain = plainColorThemeById(activeColorTheme);
+    if (plain != null) {
+      return plain.buildTheme(isDark: isDarkMode);
+    }
+
     switch (activeColorTheme) {
-      case 'Yeşil': return isDarkMode ? greenDarkTheme : greenLightTheme;
-      case 'Turuncu': return isDarkMode ? orangeDarkTheme : orangeLightTheme;
       case 'Varsayılan':
       default:
         return isDarkMode ? darkTheme : lightTheme;
@@ -2461,6 +2413,8 @@ class _PomodoroHomeState extends State<PomodoroHome>
     final bool isDerinUzayTheme = activeTheme == 'Derin Uzay';
     final bool isJaponTheme = activeTheme == 'Japon';
     final bool isMisirTheme = activeTheme == 'Mısır';
+    final bool isIskandinavyaTheme = activeTheme == 'İskandinavya';
+    final bool isMachuPicchuTheme = activeTheme == 'Machu Picchu';
 
     return Scaffold(
       extendBody: isDerinUzayTheme,
@@ -2495,7 +2449,17 @@ class _PomodoroHomeState extends State<PomodoroHome>
                       currentIndex: _bottomNavIndex,
                       onTap: _onBottomNavTapped,
                     )
-                  : _buildStandardBottomNav(),
+                  : isIskandinavyaTheme
+                      ? IskandinavyaBottomNavBar(
+                          currentIndex: _bottomNavIndex,
+                          onTap: _onBottomNavTapped,
+                        )
+                      : isMachuPicchuTheme
+                          ? MachuPicchuBottomNavBar(
+                              currentIndex: _bottomNavIndex,
+                              onTap: _onBottomNavTapped,
+                            )
+                          : _buildStandardBottomNav(),
     );
   }
 }
@@ -3829,23 +3793,20 @@ class _ThemeViewState extends State<ThemeView> {
                     cardColor: const Color(0xFF1A2744),
                   ),
 
-                  // Yeşil Theme
-                  _buildThemeCard(
-                    title: 'Yeşil',
-                    bgColor: const Color(0xFF388E3C),
-                    appColor: const Color(0xFF4CAF50),
-                    textColor: Colors.white70,
-                    cardColor: const Color(0xFF1B5E20),
-                  ),
-
-                  // Turuncu Theme
-                  _buildThemeCard(
-                    title: 'Turuncu',
-                    bgColor: const Color(0xFFF57C00),
-                    appColor: const Color(0xFFFF9800),
-                    textColor: Colors.white70,
-                    cardColor: const Color(0xFFE65100),
-                  ),
+                  for (final plain in plainColorThemes)
+                    _buildThemeCard(
+                      title: plain.id,
+                      bgColor: themeSettings.isDarkMode
+                          ? plain.scaffoldDark
+                          : plain.scaffoldLight,
+                      appColor: plain.primary,
+                      textColor: themeSettings.isDarkMode
+                          ? Colors.white70
+                          : Colors.black87,
+                      cardColor: themeSettings.isDarkMode
+                          ? plain.cardDark
+                          : plain.cardLight,
+                    ),
 
                 ],
               ),
