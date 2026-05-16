@@ -16,6 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'notification_service.dart';
 import 'shop_view.dart';
 import 'space_bottom_nav.dart';
+import 'japan_bottom_nav.dart';
+import 'misir_bottom_nav.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -2455,7 +2457,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
 
   @override
   Widget build(BuildContext context) {
-    final bool isDerinUzayTheme = themeSettings.activeColorTheme == 'Derin Uzay';
+    final String activeTheme = themeSettings.activeColorTheme;
+    final bool isDerinUzayTheme = activeTheme == 'Derin Uzay';
+    final bool isJaponTheme = activeTheme == 'Japon';
+    final bool isMisirTheme = activeTheme == 'Mısır';
 
     return Scaffold(
       extendBody: isDerinUzayTheme,
@@ -2480,7 +2485,17 @@ class _PomodoroHomeState extends State<PomodoroHome>
                 onTap: _onBottomNavTapped,
               ),
             )
-          : _buildStandardBottomNav(),
+          : isJaponTheme
+              ? JapanBottomNavBar(
+                  currentIndex: _bottomNavIndex,
+                  onTap: _onBottomNavTapped,
+                )
+              : isMisirTheme
+                  ? MisirBottomNavBar(
+                      currentIndex: _bottomNavIndex,
+                      onTap: _onBottomNavTapped,
+                    )
+                  : _buildStandardBottomNav(),
     );
   }
 }
