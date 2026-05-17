@@ -33,6 +33,7 @@ class ShopView extends StatefulWidget {
   final Function(int) onPurchase;
   final VoidCallback onEquipAction;
   final Function(String) onThemeEquipAction;
+  final bool isJaponTheme;
 
   const ShopView({
     Key? key,
@@ -40,6 +41,7 @@ class ShopView extends StatefulWidget {
     required this.onPurchase,
     required this.onEquipAction,
     required this.onThemeEquipAction,
+    this.isJaponTheme = false,
   }) : super(key: key);
 
   @override
@@ -741,8 +743,9 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final bool isJapon = widget.isJaponTheme;
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor, // Background color adapting to Theme
+      backgroundColor: isJapon ? Colors.transparent : Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Mağaza', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 22)),
         centerTitle: true,

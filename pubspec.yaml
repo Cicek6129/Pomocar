@@ -72,6 +72,7 @@ flutter:
     - assets/Icons/misir/
     - assets/Icons/iskandinavya/
     - assets/Icons/machu_picchu/
+    - assets/Cards/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

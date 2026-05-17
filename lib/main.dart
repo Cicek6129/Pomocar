@@ -1476,7 +1476,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
 
 
   Widget _buildStatsView() {
-    return SafeArea(
+    return _wrapWithJapanBg(SafeArea(
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -1632,7 +1632,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildStatRow(String title, String value) {
@@ -1743,14 +1743,14 @@ class _PomodoroHomeState extends State<PomodoroHome>
   }
 
   Widget _buildSettingsView() {
-    return SettingsView(
+    return _wrapWithJapanBg(SettingsView(
       key: _settingsKey,
       onNavigateToMarket: () {
         setState(() {
           _bottomNavIndex = 1; // Market index
         });
       },
-    );
+    ));
   }
 
 
@@ -2336,8 +2336,24 @@ class _PomodoroHomeState extends State<PomodoroHome>
     return timerContent;
   }
 
+  Widget _wrapWithJapanBg(Widget child) {
+    final bool isJapon = themeSettings.activeColorTheme == 'Japon';
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        isJapon
+            ? Image.asset(
+                'assets/backgrounds/Japan_Background.png',
+                fit: BoxFit.cover,
+              )
+            : const SizedBox.shrink(),
+        child,
+      ],
+    );
+  }
+
   Widget _buildShopView() {
-    return ShopView(
+    return _wrapWithJapanBg(ShopView(
       currentKm: _totalKm,
       onPurchase: (cost) {
         setState(() {
@@ -2362,7 +2378,8 @@ class _PomodoroHomeState extends State<PomodoroHome>
       onThemeEquipAction: (String themeName) {
         themeSettings.updateTheme(themeName);
       },
-    );
+      isJaponTheme: themeSettings.activeColorTheme == 'Japon',
+    ));
   }
 
   Widget _buildStandardBottomNav() {
@@ -2489,31 +2506,31 @@ class _SettingsViewState extends State<SettingsView> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: InkWell(
-        onTap: onTap,
+      child: Material(
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
-        child: Ink(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              icon,
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: textColor,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Row(
+              children: [
+                icon,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
                   ),
                 ),
-              ),
-              ?trailing,
-            ],
+                ?trailing,
+              ],
+            ),
           ),
         ),
       ),
@@ -3056,31 +3073,31 @@ class _SoundViewState extends State<SoundView> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: InkWell(
-        onTap: onTap,
+      child: Material(
+        color: const Color(0xFFEEEEEE),
         borderRadius: BorderRadius.circular(16),
-        child: Ink(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEEEEEE),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              icon,
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: textColor,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Row(
+              children: [
+                icon,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
                   ),
                 ),
-              ),
-              trailing ?? const Icon(Icons.chevron_right, color: Colors.black54),
-            ],
+                trailing ?? const Icon(Icons.chevron_right, color: Colors.black54),
+              ],
+            ),
           ),
         ),
       ),
@@ -3223,47 +3240,47 @@ class AboutView extends StatelessWidget {
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: InkWell(
-        onTap: onTap,
+      child: Material(
+        color: const Color(0xFFEEEEEE),
         borderRadius: BorderRadius.circular(16),
-        child: Ink(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEEEEEE),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              icon,
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: textColor,
-                      ),
-                    ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 2),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Row(
+              children: [
+                icon,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        subtitle,
+                        title,
                         style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400,
-                          color: textColor.withValues(alpha: 0.6),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
                         ),
                       ),
-                    ]
-                  ],
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: textColor.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ]
+                    ],
+                  ),
                 ),
-              ),
-              const Icon(Icons.chevron_right, color: Colors.black54),
-            ],
+                const Icon(Icons.chevron_right, color: Colors.black54),
+              ],
+            ),
           ),
         ),
       ),
@@ -3387,33 +3404,35 @@ class _LanguageViewState extends State<LanguageView> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Ink(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEEEEEE),
-            borderRadius: BorderRadius.circular(16),
-            border: isSelected ? Border.all(color: Theme.of(context).primaryColor, width: 1.5) : null,
-          ),
-          child: Row(
-            children: [
-              icon,
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                    color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
+      child: Material(
+        color: const Color(0xFFEEEEEE),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: isSelected ? BorderSide(color: Theme.of(context).primaryColor, width: 1.5) : BorderSide.none,
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Row(
+              children: [
+                icon,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                      color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
+                    ),
                   ),
                 ),
-              ),
-              if (isSelected)
-                Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor)
-            ],
+                if (isSelected)
+                  Icon(Icons.radio_button_checked, color: Theme.of(context).primaryColor)
+              ],
+            ),
           ),
         ),
       ),
@@ -3533,6 +3552,7 @@ class _ThemeViewState extends State<ThemeView> {
     required Color appColor,
     required Color textColor,
     required Color cardColor,
+    String? imagePath,
   }) {
     bool isSelected = themeSettings.activeColorTheme == title;
     bool isLocked = !_unlockedThemes.contains(title);
@@ -3540,121 +3560,138 @@ class _ThemeViewState extends State<ThemeView> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
-      child: InkWell(
-        onTap: () {
-          if (isLocked) {
-             showDialog(
-               context: context,
-               builder: (BuildContext context) {
-                 return AlertDialog(
-                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                   title: Text(
-                     'Kilitli Tema',
-                     style: TextStyle(
-                       fontWeight: FontWeight.bold,
-                       color: Theme.of(context).primaryColor,
-                     ),
-                     textAlign: TextAlign.center,
-                   ),
-                   content: const Text(
-                     'Lütfen bu temayı kullanabilmek için Mağaza (Market) bölümünden satın alın.',
-                     textAlign: TextAlign.center,
-                     style: TextStyle(fontSize: 16),
-                   ),
-                   actionsAlignment: MainAxisAlignment.center,
-                   actions: [
-                     ElevatedButton(
-                       style: ElevatedButton.styleFrom(
-                         backgroundColor: Theme.of(context).primaryColor,
-                         foregroundColor: Colors.white,
-                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Material(
+        color: const Color(0xFFEEEEEE),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: isSelected ? BorderSide(color: Theme.of(context).primaryColor, width: 1.5) : BorderSide.none,
+        ),
+        child: InkWell(
+          onTap: () {
+            if (isLocked) {
+               showDialog(
+                 context: context,
+                 builder: (BuildContext context) {
+                   return AlertDialog(
+                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                     title: Text(
+                       'Kilitli Tema',
+                       style: TextStyle(
+                         fontWeight: FontWeight.bold,
+                         color: Theme.of(context).primaryColor,
                        ),
-                       onPressed: () => Navigator.of(context).pop(),
-                       child: const Text('Tamam', style: TextStyle(fontWeight: FontWeight.bold)),
+                       textAlign: TextAlign.center,
                      ),
-                   ],
-                 );
-               }
-             );
-          } else {
-             themeSettings.updateTheme(title);
-          }
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Ink(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEEEEEE),
-            borderRadius: BorderRadius.circular(16),
-            border: isSelected ? Border.all(color: Theme.of(context).primaryColor, width: 1.5) : null,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected ? Theme.of(context).primaryColor : const Color(0xFF424242),
+                     content: const Text(
+                       'Lütfen bu temayı kullanabilmek için Mağaza (Market) bölümünden satın alın.',
+                       textAlign: TextAlign.center,
+                       style: TextStyle(fontSize: 16),
+                     ),
+                     actionsAlignment: MainAxisAlignment.center,
+                     actions: [
+                       ElevatedButton(
+                         style: ElevatedButton.styleFrom(
+                           backgroundColor: Theme.of(context).primaryColor,
+                           foregroundColor: Colors.white,
+                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                         ),
+                         onPressed: () => Navigator.of(context).pop(),
+                         child: const Text('Tamam', style: TextStyle(fontWeight: FontWeight.bold)),
+                       ),
+                     ],
+                   );
+                 }
+               );
+            } else {
+               themeSettings.updateTheme(title);
+            }
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected ? Theme.of(context).primaryColor : const Color(0xFF424242),
+                          ),
                         ),
-                      ),
-                      if (isLocked) ...[
-                        const SizedBox(width: 8),
-                        const Icon(Icons.lock, size: 20, color: Colors.grey),
+                        if (isLocked) ...[
+                          const SizedBox(width: 8),
+                          const Icon(Icons.lock, size: 20, color: Colors.grey),
+                        ],
                       ],
-                    ],
-                  ),
-                  if (isSelected)
-                    Container(
-                      width: 48,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.all(2.0),
-                          child: CircleAvatar(backgroundColor: Colors.white, radius: 12),
+                    ),
+                    if (isSelected)
+                      Container(
+                        width: 48,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: CircleAvatar(backgroundColor: Colors.white, radius: 12),
+                          ),
+                        ),
+                      )
+                    else
+                      Container(
+                        width: 48,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: Colors.black87,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                             padding: EdgeInsets.all(2.0),
+                             child: CircleAvatar(backgroundColor: Colors.white, radius: 12),
+                          ),
                         ),
                       ),
-                    )
-                  else
-                    Container(
-                      width: 48,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: Colors.black87,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                           padding: EdgeInsets.all(2.0),
-                           child: CircleAvatar(backgroundColor: Colors.white, radius: 12),
-                        ),
+                  ],
+                ),
+                if (imagePath != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        imagePath,
+                        width: double.infinity,
+                        height: 140,
+                        fit: BoxFit.cover,
                       ),
                     ),
+                  )
+                else ...[
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildColorCircle(bgColor, 'Arka Plan'),
+                      _buildColorCircle(appColor, 'Uygulama'),
+                      _buildColorCircle(textColor, 'Yazı'),
+                      _buildColorCircle(cardColor, 'Kart'),
+                    ],
+                  ),
                 ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildColorCircle(bgColor, 'Arka Plan'),
-                  _buildColorCircle(appColor, 'Uygulama'),
-                  _buildColorCircle(textColor, 'Yazı'),
-                  _buildColorCircle(cardColor, 'Kart'),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -3755,6 +3792,7 @@ class _ThemeViewState extends State<ThemeView> {
                     appColor: const Color(0xFFE91E63),
                     textColor: Colors.black87,
                     cardColor: const Color(0xFFF8BBD0),
+                    imagePath: 'assets/Cards/Japon_Card.png',
                   ),
 
                   // Mısır Theme
@@ -3764,6 +3802,7 @@ class _ThemeViewState extends State<ThemeView> {
                     appColor: const Color(0xFFFFC107),
                     textColor: Colors.black87,
                     cardColor: const Color(0xFFFFECB3),
+                    imagePath: 'assets/Cards/Mısır_Card.png',
                   ),
 
                   // Machu Picchu Theme
@@ -3773,6 +3812,7 @@ class _ThemeViewState extends State<ThemeView> {
                     appColor: const Color(0xFF2E7D32),
                     textColor: Colors.black87,
                     cardColor: const Color(0xFFC8E6C9),
+                    imagePath: 'assets/Cards/MachuPicchu_Card.png',
                   ),
 
                   // İskandinavya Theme
@@ -3782,6 +3822,7 @@ class _ThemeViewState extends State<ThemeView> {
                     appColor: const Color(0xFF00ACC1),
                     textColor: Colors.black87,
                     cardColor: const Color(0xFFB2EBF2),
+                    imagePath: 'assets/Cards/İskandinavya_Card.png',
                   ),
 
                   // Derin Uzay Theme
@@ -3791,6 +3832,7 @@ class _ThemeViewState extends State<ThemeView> {
                     appColor: const Color(0xFF00E5FF),
                     textColor: Colors.white70,
                     cardColor: const Color(0xFF1A2744),
+                    imagePath: 'assets/Cards/Uzay_Card.png',
                   ),
 
                   for (final plain in plainColorThemes)
