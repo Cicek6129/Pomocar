@@ -82,41 +82,46 @@ final List<ShopItem> allShopItems = [
     ShopItem(id: 'car24', category: 'garaj', name: 'Premium Spor 5', price: 1000, imagePath: 'assets/car/car14.png', color: Colors.redAccent),
     
     // Özel: Ağaçlar (Yol)
-    ShopItem(id: 'tree1', category: 'yol', name: 'Başlangıç Ağacı 1', price: 0, imagePath: 'assets/tree/tree1.PNG', color: Colors.green),
-    ShopItem(id: 'tree2', category: 'yol', name: 'Başlangıç Ağacı 2', price: 0, imagePath: 'assets/tree/tree2.png', color: Colors.green),
-    ShopItem(id: 'tree3', category: 'yol', name: 'Başlangıç Ağacı 3', price: 0, imagePath: 'assets/tree/tree3.PNG', color: Colors.green),
-    
-    // Standart Ağaçlar (5-20 Km)
-    ShopItem(id: 'tree4', category: 'yol', name: 'Standart Ağaç 1', price: 5, imagePath: 'assets/tree/tree4.png', color: Colors.green),
-    ShopItem(id: 'tree5', category: 'yol', name: 'Standart Ağaç 2', price: 6, imagePath: 'assets/tree/tree5.png', color: Colors.green),
-    ShopItem(id: 'tree6', category: 'yol', name: 'Standart Ağaç 3', price: 7, imagePath: 'assets/tree/tree6.png', color: Colors.green),
-    ShopItem(id: 'tree7', category: 'yol', name: 'Standart Ağaç 4', price: 8, imagePath: 'assets/tree/tree7.png', color: Colors.green),
-    ShopItem(id: 'tree8', category: 'yol', name: 'Standart Ağaç 5', price: 9, imagePath: 'assets/tree/tree8.png', color: Colors.green),
-    ShopItem(id: 'tree9', category: 'yol', name: 'Standart Ağaç 6', price: 10, imagePath: 'assets/tree/tree9.png', color: Colors.green),
-    ShopItem(id: 'tree10', category: 'yol', name: 'Standart Ağaç 7', price: 11, imagePath: 'assets/tree/tree10.png', color: Colors.green),
-    ShopItem(id: 'tree11', category: 'yol', name: 'Standart Ağaç 8', price: 12, imagePath: 'assets/tree/tree11.png', color: Colors.green),
-    ShopItem(id: 'tree12', category: 'yol', name: 'Standart Ağaç 9', price: 13, imagePath: 'assets/tree/tree12.png', color: Colors.green),
-    ShopItem(id: 'tree13', category: 'yol', name: 'Standart Ağaç 10', price: 14, imagePath: 'assets/tree/tree13.png', color: Colors.green),
-    ShopItem(id: 'tree14', category: 'yol', name: 'Standart Ağaç 11', price: 15, imagePath: 'assets/tree/tree14.png', color: Colors.green),
-    ShopItem(id: 'tree15', category: 'yol', name: 'Standart Ağaç 12', price: 16, imagePath: 'assets/tree/tree15.png', color: Colors.green),
-    ShopItem(id: 'tree16', category: 'yol', name: 'Standart Ağaç 13', price: 18, imagePath: 'assets/tree/tree16.png', color: Colors.green),
-    ShopItem(id: 'tree17', category: 'yol', name: 'Standart Ağaç 14', price: 19, imagePath: 'assets/tree/tree17.png', color: Colors.green),
-    ShopItem(id: 'tree18', category: 'yol', name: 'Standart Ağaç 15', price: 20, imagePath: 'assets/tree/tree18.png', color: Colors.green),
+    // (Ağaçlar assets/tree içerisinde yer alır)
 
-    // Premium Ağaçlar (50-150 Km)
-    ShopItem(id: 'tree19', category: 'yol', name: 'Premium Ağaç 1', price: 50, imagePath: 'assets/tree/tree19.png', color: Colors.amber),
-    ShopItem(id: 'tree20', category: 'yol', name: 'Premium Ağaç 2', price: 55, imagePath: 'assets/tree/tree20.png', color: Colors.amber),
-    ShopItem(id: 'tree21', category: 'yol', name: 'Premium Ağaç 3', price: 65, imagePath: 'assets/tree/tree21.png', color: Colors.amber),
-    ShopItem(id: 'tree22', category: 'yol', name: 'Premium Ağaç 4', price: 75, imagePath: 'assets/tree/tree22.png', color: Colors.amber),
-    ShopItem(id: 'tree23', category: 'yol', name: 'Premium Ağaç 5', price: 85, imagePath: 'assets/tree/tree23.png', color: Colors.amber),
-    ShopItem(id: 'tree24', category: 'yol', name: 'Premium Ağaç 6', price: 90, imagePath: 'assets/tree/tree24.png', color: Colors.amber),
-    ShopItem(id: 'tree25', category: 'yol', name: 'Premium Ağaç 7', price: 95, imagePath: 'assets/tree/tree25.png', color: Colors.amber),
-    ShopItem(id: 'tree26', category: 'yol', name: 'Premium Ağaç 8', price: 100, imagePath: 'assets/tree/tree26.png', color: Colors.amber),
-    ShopItem(id: 'tree27', category: 'yol', name: 'Premium Ağaç 9', price: 110, imagePath: 'assets/tree/tree27.png', color: Colors.amber),
-    ShopItem(id: 'tree28', category: 'yol', name: 'Premium Ağaç 10', price: 120, imagePath: 'assets/tree/tree28.png', color: Colors.amber),
-    ShopItem(id: 'tree29', category: 'yol', name: 'Premium Ağaç 11', price: 130, imagePath: 'assets/tree/tree29.png', color: Colors.amber),
-    ShopItem(id: 'tree30', category: 'yol', name: 'Premium Ağaç 12', price: 140, imagePath: 'assets/tree/tree30.png', color: Colors.amber),
-    ShopItem(id: 'tree31', category: 'yol', name: 'Premium Ağaç 13', price: 150, imagePath: 'assets/tree/tree31.png', color: Colors.amber),
+    // Standart Ağaçlar (50-150 Km) (Eskiden Premium)
+    ShopItem(id: 'tree19', category: 'yol', name: 'Standart Ağaç 1', price: 50, imagePath: 'assets/tree/tree19.png', color: Colors.green),
+    ShopItem(id: 'tree20', category: 'yol', name: 'Standart Ağaç 2', price: 55, imagePath: 'assets/tree/tree20.png', color: Colors.green),
+    ShopItem(id: 'tree21', category: 'yol', name: 'Standart Ağaç 3', price: 65, imagePath: 'assets/tree/tree21.png', color: Colors.green),
+    ShopItem(id: 'tree22', category: 'yol', name: 'Standart Ağaç 4', price: 75, imagePath: 'assets/tree/tree22.png', color: Colors.green),
+    ShopItem(id: 'tree23', category: 'yol', name: 'Standart Ağaç 5', price: 85, imagePath: 'assets/tree/tree23.png', color: Colors.green),
+    ShopItem(id: 'tree24', category: 'yol', name: 'Standart Ağaç 6', price: 90, imagePath: 'assets/tree/tree24.png', color: Colors.green),
+    ShopItem(id: 'tree25', category: 'yol', name: 'Standart Ağaç 7', price: 95, imagePath: 'assets/tree/tree25.png', color: Colors.green),
+    ShopItem(id: 'tree26', category: 'yol', name: 'Standart Ağaç 8', price: 100, imagePath: 'assets/tree/tree26.png', color: Colors.green),
+    ShopItem(id: 'tree27', category: 'yol', name: 'Standart Ağaç 9', price: 110, imagePath: 'assets/tree/tree27.png', color: Colors.green),
+    ShopItem(id: 'tree28', category: 'yol', name: 'Standart Ağaç 10', price: 120, imagePath: 'assets/tree/tree28.png', color: Colors.green),
+    ShopItem(id: 'tree29', category: 'yol', name: 'Standart Ağaç 11', price: 130, imagePath: 'assets/tree/tree29.png', color: Colors.green),
+    ShopItem(id: 'tree30', category: 'yol', name: 'Standart Ağaç 12', price: 140, imagePath: 'assets/tree/tree30.png', color: Colors.green),
+    ShopItem(id: 'tree31', category: 'yol', name: 'Standart Ağaç 13', price: 150, imagePath: 'assets/tree/tree31.png', color: Colors.green),
+
+    // Tema Ağaçları (Sakura)
+    ShopItem(id: 'tree_sakura1', category: 'yol', name: 'Hasır Meşesi', price: 250, imagePath: 'assets/tree/Hasır Meşesi.png', color: Colors.pinkAccent),
+    ShopItem(id: 'tree_sakura2', category: 'yol', name: 'Pagoda Yaprağı', price: 250, imagePath: 'assets/tree/Pagoda Yaprağı.png', color: Colors.pinkAccent),
+    ShopItem(id: 'tree_sakura3', category: 'yol', name: 'Sakura Sürgünü', price: 250, imagePath: 'assets/tree/Sakura Sürgünü.png', color: Colors.pinkAccent),
+    ShopItem(id: 'tree_sakura4', category: 'yol', name: 'Zen Çamı', price: 250, imagePath: 'assets/tree/Zen Çamı.png', color: Colors.pinkAccent),
+
+    // Tema Ağaçları (Mısır)
+    ShopItem(id: 'tree_misir1', category: 'yol', name: 'Hurma Palmiyesi', price: 250, imagePath: 'assets/tree/Hurma Palmiyesi.png', color: Colors.amber),
+    ShopItem(id: 'tree_misir2', category: 'yol', name: 'Papirüs Sazı', price: 250, imagePath: 'assets/tree/Papirüs Sazı.png', color: Colors.amber),
+    ShopItem(id: 'tree_misir3', category: 'yol', name: 'Saguaro Kaktüsü', price: 250, imagePath: 'assets/tree/Saguaro Kaktüsü.png', color: Colors.amber),
+    ShopItem(id: 'tree_misir4', category: 'yol', name: 'Şemsiye Akasya', price: 250, imagePath: 'assets/tree/Şemsiye Akasya.png', color: Colors.amber),
+
+    // Tema Ağaçları (İskandinavya)
+    ShopItem(id: 'tree_isk1', category: 'yol', name: 'Bodur Huş Ağacı', price: 250, imagePath: 'assets/tree/Bodur Huş Ağacı.png', color: Colors.cyan),
+    ShopItem(id: 'tree_isk2', category: 'yol', name: 'Kadim Yggdrasil Dişbudak', price: 250, imagePath: 'assets/tree/Kadim Yggdrasil Dişbudak.png', color: Colors.cyan),
+    ShopItem(id: 'tree_isk3', category: 'yol', name: 'Karlı Norveç Ladini', price: 250, imagePath: 'assets/tree/Karlı Norveç Ladini.png', color: Colors.cyan),
+    ShopItem(id: 'tree_isk4', category: 'yol', name: 'Rüzgar Dövülmüş İskoç Çamı', price: 250, imagePath: 'assets/tree/Rüzgar Dövülmüş İskoç Çamı.png', color: Colors.cyan),
+
+    // Tema Ağaçları (Machu Picchu)
+    ShopItem(id: 'tree_mac1', category: 'yol', name: 'Arrayán Ağacı', price: 250, imagePath: 'assets/tree/Arrayán Ağacı.png', color: Colors.green),
+    ShopItem(id: 'tree_mac2', category: 'yol', name: 'Cinchona Ağacı', price: 250, imagePath: 'assets/tree/Cinchona Ağacı.png', color: Colors.green),
+    ShopItem(id: 'tree_mac3', category: 'yol', name: 'Queñua Ağacı', price: 250, imagePath: 'assets/tree/Queñua Ağacı.png', color: Colors.green),
+    ShopItem(id: 'tree_mac4', category: 'yol', name: 'Sauco Ağacı', price: 250, imagePath: 'assets/tree/Sauco Ağacı.png', color: Colors.green),
     
     // Çalılar
     ShopItem(id: 'bush0', category: 'gokyuzu', name: 'Başlangıç Çalısı', price: 0,  imagePath: 'assets/bush/bush.png',  color: Colors.green),
@@ -196,8 +201,8 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
   List<String> _purchasedItems = [];
   Map<String, String> _equippedItems = {};
 
-  List<String> unlockedTrees = ['tree1', 'tree2', 'tree3'];
-  List<String> equippedTrees = ['tree1', 'tree2', 'tree3'];
+  List<String> unlockedTrees = ['tree19', 'tree20', 'tree21'];
+  List<String> equippedTrees = ['tree19', 'tree20', 'tree21'];
 
   List<String> unlockedCalilar = ['bush0', 'rock0'];
   List<String> equippedCalilar = ['bush0', 'rock0'];
@@ -239,8 +244,8 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
     setState(() {
       _purchasedItems = purchased;
       
-      unlockedTrees = prefs.getStringList('unlocked_trees') ?? ['tree1', 'tree2', 'tree3'];
-      equippedTrees = prefs.getStringList('equipped_trees') ?? ['tree1', 'tree2', 'tree3'];
+      unlockedTrees = prefs.getStringList('unlocked_trees') ?? ['tree19', 'tree20', 'tree21'];
+      equippedTrees = prefs.getStringList('equipped_trees') ?? ['tree19', 'tree20', 'tree21'];
       
       unlockedCalilar = prefs.getStringList('unlocked_calilar') ?? ['bush0', 'rock0'];
       equippedCalilar = prefs.getStringList('equipped_calilar') ?? ['bush0', 'rock0'];
@@ -250,6 +255,27 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
       _equippedItems['yol'] = prefs.getString('equipped_yol') ?? 'default';
       _equippedItems['teyp'] = prefs.getString('equipped_teyp') ?? 'default';
       _equippedItems['tema'] = equippedTheme;
+      // Retroactive unlock for themes already purchased
+      if (_purchasedItems.contains('Japon')) {
+        for (var t in ['tree_sakura1', 'tree_sakura2', 'tree_sakura3', 'tree_sakura4']) {
+          if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+        }
+      }
+      if (_purchasedItems.contains('Mısır')) {
+        for (var t in ['tree_misir1', 'tree_misir2', 'tree_misir3', 'tree_misir4']) {
+          if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+        }
+      }
+      if (_purchasedItems.contains('İskandinavya')) {
+        for (var t in ['tree_isk1', 'tree_isk2', 'tree_isk3', 'tree_isk4']) {
+          if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+        }
+      }
+      if (_purchasedItems.contains('Machu Picchu')) {
+        for (var t in ['tree_mac1', 'tree_mac2', 'tree_mac3', 'tree_mac4']) {
+          if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+        }
+      }
     });
   }
 
@@ -328,6 +354,29 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
                       unlockedCalilar.add(item.id);
                     } else {
                       _purchasedItems.add(item.id);
+                      
+                      // Tema satın alındığında, ilgili temanın ağaçlarını otomatik aç
+                      if (item.id == 'Japon') {
+                        var sakuraTrees = ['tree_sakura1', 'tree_sakura2', 'tree_sakura3', 'tree_sakura4'];
+                        for (var t in sakuraTrees) {
+                          if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+                        }
+                      } else if (item.id == 'Mısır') {
+                        var misirTrees = ['tree_misir1', 'tree_misir2', 'tree_misir3', 'tree_misir4'];
+                        for (var t in misirTrees) {
+                          if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+                        }
+                      } else if (item.id == 'İskandinavya') {
+                        var iskTrees = ['tree_isk1', 'tree_isk2', 'tree_isk3', 'tree_isk4'];
+                        for (var t in iskTrees) {
+                          if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+                        }
+                      } else if (item.id == 'Machu Picchu') {
+                        var macTrees = ['tree_mac1', 'tree_mac2', 'tree_mac3', 'tree_mac4'];
+                        for (var t in macTrees) {
+                          if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+                        }
+                      }
                     }
                   });
                   _savePurchases();
@@ -360,6 +409,18 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
   void _equipItem(ShopItem item) {
     setState(() {
       _equippedItems[item.category] = item.id;
+
+      if (item.category == 'tema') {
+        if (item.id == 'Japon') {
+          equippedTrees = ['tree_sakura1', 'tree_sakura2', 'tree_sakura3', 'tree_sakura4'];
+        } else if (item.id == 'Mısır') {
+          equippedTrees = ['tree_misir1', 'tree_misir2', 'tree_misir3', 'tree_misir4'];
+        } else if (item.id == 'İskandinavya') {
+          equippedTrees = ['tree_isk1', 'tree_isk2', 'tree_isk3', 'tree_isk4'];
+        } else if (item.id == 'Machu Picchu') {
+          equippedTrees = ['tree_mac1', 'tree_mac2', 'tree_mac3', 'tree_mac4'];
+        }
+      }
     });
     _saveEquips();
 
@@ -369,10 +430,10 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
   }
 
   void _equipTree(ShopItem item) {
-    if (equippedTrees.length >= 3) {
+    if (equippedTrees.length >= 5) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Dağda en fazla 3 ağaç sergileyebilirsiniz. Lütfen önce birini çıkarın.'),
+          content: Text('Dağda en fazla 5 ağaç sergileyebilirsiniz. Lütfen önce birini çıkarın.'),
           backgroundColor: Colors.red,
           duration: Duration(seconds: 2),
         ),
@@ -393,10 +454,10 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
   }
 
   void _equipCali(ShopItem item) {
-    if (equippedCalilar.length >= 3) {
+    if (equippedCalilar.length >= 5) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Tepede en fazla 3 çalı veya kaya sergileyebilirsiniz. Lütfen önce birini çıkarın.'),
+          content: Text('Tepede en fazla 5 çalı veya kaya sergileyebilirsiniz. Lütfen önce birini çıkarın.'),
           backgroundColor: Colors.red,
           duration: Duration(seconds: 2),
         ),

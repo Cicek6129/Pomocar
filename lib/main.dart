@@ -588,6 +588,19 @@ class _PomodoroHomeState extends State<PomodoroHome>
       
       _activeTrees = eqTrees;
       _activeCalilar = eqCalilar;
+
+      for (var tree in _trees) {
+        tree.assetIndex = _random.nextInt(eqTrees.isNotEmpty ? eqTrees.length : 1);
+      }
+      for (var bush in _bushes) {
+        bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+      }
+      for (var bush in _bushes2) {
+        bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+      }
+      for (var bush in _bushes3) {
+        bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+      }
     });
   }
 
@@ -1924,10 +1937,8 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                                 width: 60, 
                                                 height: 60,
                                                 child: Image.asset(
-                                                    _activeTrees.isEmpty ? 'assets/tree/tree1.PNG' : (allShopItems.firstWhere((item) => item.id == _activeTrees[tree.assetIndex % _activeTrees.length], orElse: () => allShopItems.firstWhere((i) => i.id == 'tree1')).imagePath ?? 'assets/tree/tree1.PNG'),
+                                                    _activeTrees.isEmpty ? 'assets/tree/tree19.png' : (allShopItems.firstWhere((item) => item.id == _activeTrees[tree.assetIndex % _activeTrees.length], orElse: () => allShopItems.firstWhere((i) => i.id == 'tree19')).imagePath ?? 'assets/tree/tree19.png'),
                                                     fit: BoxFit.contain,
-                                                    color: Colors.black.withValues(alpha: 0.6 + ((tree.scale - 0.8) * 0.8)), 
-                                                    colorBlendMode: BlendMode.srcATop,
                                                 ),
                                             ),
                                         ),
@@ -2365,6 +2376,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
         final prefs = await SharedPreferences.getInstance();
         String equippedCarId = prefs.getString('equipped_garaj') ?? 'car1';
         List<String> eqTrees = prefs.getStringList('equipped_trees') ?? ['tree1', 'tree2', 'tree3'];
+        List<String> eqCalilar = prefs.getStringList('equipped_calilar') ?? ['bush0', 'rock0'];
         setState(() {
           final equippedCar = allShopItems.firstWhere(
             (item) => item.id == equippedCarId, 
@@ -2373,6 +2385,21 @@ class _PomodoroHomeState extends State<PomodoroHome>
           _equippedCarPath = equippedCar.imagePath ?? 'assets/car/car1.png';
           _equippedCarScale = equippedCar.imageScale;
           _activeTrees = eqTrees;
+          _activeCalilar = eqCalilar;
+
+          // Dağdaki ağaçların ve çalıların hemen güncellenmesi için indekslerini yenile
+          for (var tree in _trees) {
+            tree.assetIndex = _random.nextInt(eqTrees.isNotEmpty ? eqTrees.length : 1);
+          }
+          for (var bush in _bushes) {
+            bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+          }
+          for (var bush in _bushes2) {
+            bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+          }
+          for (var bush in _bushes3) {
+            bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+          }
         });
       },
       onThemeEquipAction: (String themeName) {
