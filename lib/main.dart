@@ -51,8 +51,9 @@ class TreeModel {
   double scale;
   double speed;
   int assetIndex; // Determine which tree image to show
+  bool isRock;
 
-  TreeModel({required this.x, required this.scale, required this.speed, required this.assetIndex});
+  TreeModel({required this.x, required this.scale, required this.speed, required this.assetIndex, this.isRock = false});
 }
 
 class FocusSession {
@@ -466,7 +467,8 @@ class _PomodoroHomeState extends State<PomodoroHome>
   List<String> _activeTrees = ['tree1', 'tree2', 'tree3'];
   
   // Dynamic Calilar Paths
-  List<String> _activeCalilar = ['bush0', 'rock0'];
+  List<String> _activeCalilar = ['bush0'];
+  List<String> _activeKayalar = ['rock0'];
   final List<TreeModel> _bushes = [];  // Row 1
   final List<TreeModel> _bushes2 = []; // Row 2
   final List<TreeModel> _bushes3 = []; // Row 3 (lowest)
@@ -510,36 +512,39 @@ class _PomodoroHomeState extends State<PomodoroHome>
         ));
     }
 
-    // Row 1 - mixed (~60% bush 40% rock), 7 items
-    for (int i = 0; i < 7; i++) {
-        bool isBush = _random.nextDouble() < 0.5;
-        _bushes.add(TreeModel(
-            x: i * 140.0 + 20.0,
-            scale: isBush ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2,
-            speed: 2.5 + _random.nextDouble() * 0.5,
-            assetIndex: isBush ? 0 : 1, // 0=bush, 1=rock
-        ));
-    }
-
-    // Row 2 - mixed (~60% bush 40% rock), 6 items staggered
-    for (int i = 0; i < 6; i++) {
-        bool isBush = _random.nextDouble() < 0.5;
-        _bushes2.add(TreeModel(
-            x: i * 140.0 + 80.0,
-            scale: isBush ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2,
-            speed: 2.5 + _random.nextDouble() * 0.5,
-            assetIndex: isBush ? 0 : 1,
-        ));
-    }
-
-    // Row 3 - lowest row, mixed, 5 items
+    // Row 1 - mixed (~60% bush 40% rock), 5 items
     for (int i = 0; i < 5; i++) {
-        bool isBush = _random.nextDouble() < 0.5;
+        bool isRock = _random.nextDouble() > 0.6;
+        _bushes.add(TreeModel(
+            x: i * 200.0 + 20.0,
+            scale: !isRock ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2,
+            speed: 1.5 + _random.nextDouble() * 0.5,
+            assetIndex: 0,
+            isRock: isRock,
+        ));
+    }
+
+    // Row 2 - mixed (~60% bush 40% rock), 4 items staggered
+    for (int i = 0; i < 4; i++) {
+        bool isRock = _random.nextDouble() > 0.6;
+        _bushes2.add(TreeModel(
+            x: i * 220.0 + 100.0,
+            scale: !isRock ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2,
+            speed: 1.6 + _random.nextDouble() * 0.5,
+            assetIndex: 0,
+            isRock: isRock,
+        ));
+    }
+
+    // Row 3 - lowest row, mixed, 3 items
+    for (int i = 0; i < 3; i++) {
+        bool isRock = _random.nextDouble() > 0.6;
         _bushes3.add(TreeModel(
-            x: i * 140.0 + 50.0,
-            scale: isBush ? 0.9 + _random.nextDouble() * 0.3 : 0.65 + _random.nextDouble() * 0.2,
-            speed: 2.5 + _random.nextDouble() * 0.5,
-            assetIndex: isBush ? 0 : 1,
+            x: i * 250.0 + 60.0,
+            scale: !isRock ? 0.9 + _random.nextDouble() * 0.3 : 0.65 + _random.nextDouble() * 0.2,
+            speed: 1.7 + _random.nextDouble() * 0.5,
+            assetIndex: 0,
+            isRock: isRock,
         ));
     }
 
@@ -576,7 +581,8 @@ class _PomodoroHomeState extends State<PomodoroHome>
     
     String equippedCarId = prefs.getString('equipped_garaj') ?? 'car1';
     List<String> eqTrees = prefs.getStringList('equipped_trees') ?? ['tree1', 'tree2', 'tree3'];
-    List<String> eqCalilar = prefs.getStringList('equipped_calilar') ?? ['bush0', 'rock0'];
+    List<String> eqCalilar = prefs.getStringList('equipped_calilar') ?? ['bush0'];
+    List<String> eqKayalar = prefs.getStringList('equipped_kayalar') ?? ['rock0'];
 
     setState(() {
       final equippedCar = allShopItems.firstWhere(
@@ -588,18 +594,17 @@ class _PomodoroHomeState extends State<PomodoroHome>
       
       _activeTrees = eqTrees;
       _activeCalilar = eqCalilar;
+      _activeKayalar = eqKayalar;
 
       for (var tree in _trees) {
         tree.assetIndex = _random.nextInt(eqTrees.isNotEmpty ? eqTrees.length : 1);
       }
-      for (var bush in _bushes) {
-        bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
-      }
-      for (var bush in _bushes2) {
-        bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
-      }
-      for (var bush in _bushes3) {
-        bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+      for (var bush in [..._bushes, ..._bushes2, ..._bushes3]) {
+        if (bush.isRock) {
+          bush.assetIndex = _random.nextInt(eqKayalar.isNotEmpty ? eqKayalar.length : 1);
+        } else {
+          bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+        }
       }
     });
   }
@@ -1875,30 +1880,33 @@ class _PomodoroHomeState extends State<PomodoroHome>
                           bush.x -= bush.speed * 0.4;
                           if (bush.x < -80) {
                             bush.x = 400 + 20.0;
-                            bool isBush = _random.nextDouble() < 0.5;
-                            bush.scale = isBush ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2;
-                            bush.speed = 2.5 + _random.nextDouble() * 0.5;
-                            bush.assetIndex = isBush ? 0 : 1;
+                            bool isRock = _random.nextDouble() > 0.6;
+                            bush.scale = !isRock ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2;
+                            bush.speed = 1.5 + _random.nextDouble() * 0.5;
+                            bush.isRock = isRock;
+                            bush.assetIndex = _random.nextInt(isRock ? (_activeKayalar.isNotEmpty ? _activeKayalar.length : 1) : (_activeCalilar.isNotEmpty ? _activeCalilar.length : 1));
                           }
                         }
                         for (var bush in _bushes2) {
                           bush.x -= bush.speed * 0.4;
                           if (bush.x < -80) {
                             bush.x = 400 + 20.0;
-                            bool isBush = _random.nextDouble() < 0.5;
-                            bush.scale = isBush ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2;
-                            bush.speed = 2.5 + _random.nextDouble() * 0.5;
-                            bush.assetIndex = isBush ? 0 : 1;
+                            bool isRock = _random.nextDouble() > 0.6;
+                            bush.scale = !isRock ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2;
+                            bush.speed = 1.6 + _random.nextDouble() * 0.5;
+                            bush.isRock = isRock;
+                            bush.assetIndex = _random.nextInt(isRock ? (_activeKayalar.isNotEmpty ? _activeKayalar.length : 1) : (_activeCalilar.isNotEmpty ? _activeCalilar.length : 1));
                           }
                         }
                         for (var bush in _bushes3) {
                           bush.x -= bush.speed * 0.4;
                           if (bush.x < -80) {
                             bush.x = 400 + 20.0;
-                            bool isBush = _random.nextDouble() < 0.5;
-                            bush.scale = isBush ? 0.9 + _random.nextDouble() * 0.3 : 0.65 + _random.nextDouble() * 0.2;
-                            bush.speed = 2.5 + _random.nextDouble() * 0.5;
-                            bush.assetIndex = isBush ? 0 : 1;
+                            bool isRock = _random.nextDouble() > 0.6;
+                            bush.scale = !isRock ? 0.9 + _random.nextDouble() * 0.3 : 0.65 + _random.nextDouble() * 0.2;
+                            bush.speed = 1.7 + _random.nextDouble() * 0.5;
+                            bush.isRock = isRock;
+                            bush.assetIndex = _random.nextInt(isRock ? (_activeKayalar.isNotEmpty ? _activeKayalar.length : 1) : (_activeCalilar.isNotEmpty ? _activeCalilar.length : 1));
                           }
                         }
                       }
@@ -1906,24 +1914,96 @@ class _PomodoroHomeState extends State<PomodoroHome>
                       return Stack(
                         children: [
                           // 1. Sky Gradient Background (Re-added here as base layer)
-                          Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [Color(0xFF87CEEB), Color(0xFFE0F7FA)],
+                          if (themeSettings.activeColorTheme == 'Japon')
+                            Positioned.fill(
+                              child: Image.asset(
+                                'assets/backgrounds/sakura_gokyuzu.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          else if (themeSettings.activeColorTheme == 'Mısır')
+                            Positioned.fill(
+                              child: Image.asset(
+                                'assets/backgrounds/misir_gokyuzu.jpeg',
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          else if (themeSettings.activeColorTheme == 'İskandinavya')
+                            Positioned.fill(
+                              child: Image.asset(
+                                'assets/backgrounds/iskandinavya_g.jpeg',
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          else if (themeSettings.activeColorTheme == 'Machu Picchu')
+                            Positioned.fill(
+                              child: Transform.translate(
+                                offset: const Offset(0, -120), // Görseli yukarı iterek gün batımını dağın üstüne çıkarıyoruz
+                                child: Transform.scale(
+                                  scale: 1.5, // Alt kısımlarda boşluk kalmaması için görseli biraz büyütüyoruz
+                                  child: Image.asset(
+                                    'assets/backgrounds/machu_picchu_g.jpeg',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            )
+                          else
+                            Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [Color(0xFF87CEEB), Color(0xFFE0F7FA)],
+                                ),
                               ),
                             ),
-                          ),
                           // 2. Distant Mountains
-                          Positioned(
-                             left: -50,
-                             bottom: 80,
-                             child: CustomPaint(
-                               size: const Size(500, 200),
-                               painter: DistantMountainPainter(),
-                             ),
-                          ),
+                          if (themeSettings.activeColorTheme == 'Japon')
+                            Positioned(
+                               left: -70,
+                               bottom: -25,
+                               child: SizedBox(
+                                 width: 285,
+                                 child: Image.asset('assets/backgrounds/fuji.png', fit: BoxFit.contain),
+                               ),
+                            )
+                          else if (themeSettings.activeColorTheme == 'Mısır')
+                            Positioned(
+                               left: -55, 
+                               bottom: 30, 
+                               child: SizedBox(
+                                 width: 190, 
+                                 child: Image.asset('assets/backgrounds/pyramid.png', fit: BoxFit.contain),
+                               ),
+                            )
+                          else if (themeSettings.activeColorTheme == 'İskandinavya')
+                            Positioned(
+                               left: -55, 
+                               bottom: 30, 
+                               child: SizedBox(
+                                 width: 190, 
+                                 child: Image.asset('assets/backgrounds/iskandinavya_mauntain.png', fit: BoxFit.contain),
+                               ),
+                            )
+                          else if (themeSettings.activeColorTheme == 'Machu Picchu')
+                            Positioned(
+                               left: -55, 
+                               bottom: 30, 
+                               child: SizedBox(
+                                 width: 190, 
+                                 child: Image.asset('assets/backgrounds/machu_pichu_dag.png', fit: BoxFit.contain),
+                               ),
+                            )
+                          else
+                            Positioned(
+                               left: -50,
+                               bottom: 80,
+                               child: CustomPaint(
+                                 size: const Size(500, 200),
+                                 painter: DistantMountainPainter(),
+                               ),
+                            ),
                           // 3. Moving Trees (Behind the Slope)
                           ..._trees.map((tree) => Positioned(
                                 left: tree.x,
@@ -1945,19 +2025,109 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                     ),
                               )),
                           // 4. The Main Mountain Slope (Overlaps trees)
-                          Positioned.fill(
-                            child: CustomPaint(
-                              painter: ModernMountainPainter(),
+                          if (themeSettings.activeColorTheme != 'Japon' && themeSettings.activeColorTheme != 'Mısır' && themeSettings.activeColorTheme != 'İskandinavya' && themeSettings.activeColorTheme != 'Machu Picchu')
+                            Positioned.fill(
+                              child: CustomPaint(
+                                painter: ModernMountainPainter(
+                                  color: const Color(0xFF4CAF50)
+                                ),
+                              ),
                             ),
+                          if (themeSettings.activeColorTheme == 'Japon')
+                            Positioned.fill(
+                              child: Transform.translate(
+                                offset: const Offset(0, -10), // Japon teması için ince ayar
+                                child: Transform.scale(
+                                  scale: 1.6,
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    'assets/backgrounds/sakura_cimen.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (themeSettings.activeColorTheme == 'Mısır')
+                            Positioned.fill(
+                              child: Transform.translate(
+                                offset: const Offset(0, -20), // Mısır için ince ayar
+                                child: Transform.scale(
+                                  scale: 1.7,
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    'assets/backgrounds/col.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (themeSettings.activeColorTheme == 'İskandinavya')
+                            Positioned.fill(
+                              child: Transform.translate(
+                                offset: const Offset(0, -20), // İskandinavya için ince ayar
+                                child: Transform.scale(
+                                  scale: 1.7,
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    'assets/backgrounds/snow.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (themeSettings.activeColorTheme == 'Machu Picchu')
+                            Positioned.fill(
+                              child: Transform.translate(
+                                offset: const Offset(0, 0), // Machu Picchu tam oturmuş
+                                child: Transform.scale(
+                                  scale: 1.7,
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    'assets/backgrounds/machu_pichu_cimen.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          // 6. The Car (Asset Image - Top Layer)
+                          Positioned(
+                            left: 100,
+                            // Reduced bounce amplitude: changed multiplier from 1.5 to 0.4
+                            bottom: 110 + (sin(_animationController.value * pi * 8) * 0.4), 
+                            child: Transform.rotate(
+                              // Perfectly matching the mountain slope: atan(0.375) ~ 0.358 radians
+                              angle: -0.358, 
+                              child: Transform.translate(
+                                  // Arabanın tekerleklerinin dağa tam basması için ofset (10 birim aşağı)
+                                  offset: const Offset(0, 10), 
+                                  child: SizedBox(
+                                      width: 100, // Boyut artırıldı
+                                      height: 100, // Boyut artırıldı
+                                      child: Transform.scale(
+                                          scale: _equippedCarScale,
+                                          child: Image.asset(
+                                              _equippedCarPath, 
+                                              fit: BoxFit.contain,
+                                      // Fallback builder in case asset is missing
+                                      errorBuilder: (context, error, stackTrace) {
+                                          return const Icon(
+                                              Icons.directions_car_filled_rounded,
+                                              size: 55,
+                                              color: Color(0xFFD32F2F),
+                                          );
+                                      },
+                                          ),
+                                      ),
+                                  ),
+                              ),
                           ),
+                          ), // Closes Positioned
                           // Row 1: mixed bushes and rocks
                           ..._bushes.map((bush) {
-                            final isBush = bush.assetIndex == 0;
-                            final items = isBush
-                                ? _activeCalilar.where((id) => id.startsWith('bush')).toList()
-                                : _activeCalilar.where((id) => id.startsWith('rock')).toList();
-                            final fallback = isBush ? 'assets/bush/bush.png' : 'assets/bush/rock.png';
-                            final assetId = items.isNotEmpty ? items[0] : (isBush ? 'bush0' : 'rock0');
+                            final isRock = bush.isRock;
+                            final items = isRock ? _activeKayalar : _activeCalilar;
+                            final fallback = isRock ? 'assets/bush/rock.png' : 'assets/bush/bush.png';
+                            final assetId = items.isNotEmpty ? items[bush.assetIndex % items.length] : (isRock ? 'rock0' : 'bush0');
                             final assetPath = allShopItems.firstWhere((item) => item.id == assetId, orElse: () => allShopItems.first).imagePath ?? fallback;
                             return Positioned(
                                 left: bush.x,
@@ -1968,11 +2138,9 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                         scale: bush.scale,
                                         alignment: Alignment.bottomCenter,
                                         child: SizedBox(
-                                            width: isBush ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
-                                            height: isBush ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
-                                            child: Image.asset(assetPath, fit: BoxFit.contain,
-                                                color: Colors.black.withValues(alpha: isBush ? 0.65 : 0.55),
-                                                colorBlendMode: BlendMode.srcATop),
+                                            width: !isRock ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
+                                            height: !isRock ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
+                                            child: Image.asset(assetPath, fit: BoxFit.contain),
                                         ),
                                     ),
                                 ),
@@ -1980,12 +2148,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
                           }),
                           // Row 2: mixed bushes and rocks
                           ..._bushes2.map((bush) {
-                            final isBush = bush.assetIndex == 0;
-                            final items = isBush
-                                ? _activeCalilar.where((id) => id.startsWith('bush')).toList()
-                                : _activeCalilar.where((id) => id.startsWith('rock')).toList();
-                            final fallback = isBush ? 'assets/bush/bush.png' : 'assets/bush/rock.png';
-                            final assetId = items.isNotEmpty ? items[0] : (isBush ? 'bush0' : 'rock0');
+                            final isRock = bush.isRock;
+                            final items = isRock ? _activeKayalar : _activeCalilar;
+                            final fallback = isRock ? 'assets/bush/rock.png' : 'assets/bush/bush.png';
+                            final assetId = items.isNotEmpty ? items[bush.assetIndex % items.length] : (isRock ? 'rock0' : 'bush0');
                             final assetPath = allShopItems.firstWhere((item) => item.id == assetId, orElse: () => allShopItems.first).imagePath ?? fallback;
                             return Positioned(
                                 left: bush.x,
@@ -1996,11 +2162,9 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                         scale: bush.scale,
                                         alignment: Alignment.bottomCenter,
                                         child: SizedBox(
-                                            width: isBush ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
-                                            height: isBush ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
-                                            child: Image.asset(assetPath, fit: BoxFit.contain,
-                                                color: Colors.black.withValues(alpha: isBush ? 0.65 : 0.55),
-                                                colorBlendMode: BlendMode.srcATop),
+                                            width: !isRock ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
+                                            height: !isRock ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
+                                            child: Image.asset(assetPath, fit: BoxFit.contain),
                                         ),
                                     ),
                                 ),
@@ -2008,12 +2172,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
                           }),
                           // Row 3: lowest row, mixed bushes and rocks
                           ..._bushes3.map((bush) {
-                            final isBush = bush.assetIndex == 0;
-                            final items = isBush
-                                ? _activeCalilar.where((id) => id.startsWith('bush')).toList()
-                                : _activeCalilar.where((id) => id.startsWith('rock')).toList();
-                            final fallback = isBush ? 'assets/bush/bush.png' : 'assets/bush/rock.png';
-                            final assetId = items.isNotEmpty ? items[0] : (isBush ? 'bush0' : 'rock0');
+                            final isRock = bush.isRock;
+                            final items = isRock ? _activeKayalar : _activeCalilar;
+                            final fallback = isRock ? 'assets/bush/rock.png' : 'assets/bush/bush.png';
+                            final assetId = items.isNotEmpty ? items[bush.assetIndex % items.length] : (isRock ? 'rock0' : 'bush0');
                             final assetPath = allShopItems.firstWhere((item) => item.id == assetId, orElse: () => allShopItems.first).imagePath ?? fallback;
                             return Positioned(
                                 left: bush.x,
@@ -2024,11 +2186,9 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                         scale: bush.scale,
                                         alignment: Alignment.bottomCenter,
                                         child: SizedBox(
-                                            width: isBush ? 52 : (28 + bush.scale * 26).clamp(28.0, 48.0),
-                                            height: isBush ? 52 : (28 + bush.scale * 26).clamp(28.0, 48.0),
-                                            child: Image.asset(assetPath, fit: BoxFit.contain,
-                                                color: Colors.black.withValues(alpha: isBush ? 0.60 : 0.50),
-                                                colorBlendMode: BlendMode.srcATop),
+                                            width: !isRock ? 52 : (28 + bush.scale * 26).clamp(28.0, 48.0),
+                                            height: !isRock ? 52 : (28 + bush.scale * 26).clamp(28.0, 48.0),
+                                            child: Image.asset(assetPath, fit: BoxFit.contain),
                                         ),
                                     ),
                                 ),
@@ -2114,39 +2274,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                               ),
                             ),
                           ),
-                          // 6. The Car (Asset Image - Top Layer)
-                          Positioned(
-                            left: 100,
-                            // Reduced bounce amplitude: changed multiplier from 1.5 to 0.4
-                            bottom: 110 + (sin(_animationController.value * pi * 8) * 0.4), 
-                            child: Transform.rotate(
-                              // Perfectly matching the mountain slope: atan(0.375) ~ 0.358 radians
-                              angle: -0.358, 
-                              child: Transform.translate(
-                                  // Arabanın tekerleklerinin dağa tam basması için ofset (10 birim aşağı)
-                                  offset: const Offset(0, 10), 
-                                  child: SizedBox(
-                                      width: 100, // Boyut artırıldı
-                                      height: 100, // Boyut artırıldı
-                                      child: Transform.scale(
-                                          scale: _equippedCarScale,
-                                          child: Image.asset(
-                                              _equippedCarPath, 
-                                              fit: BoxFit.contain,
-                                      // Fallback builder in case asset is missing
-                                      errorBuilder: (context, error, stackTrace) {
-                                          return const Icon(
-                                              Icons.directions_car_filled_rounded,
-                                              size: 55,
-                                              color: Color(0xFFD32F2F),
-                                          );
-                                      },
-                                          ),
-                                      ),
-                                  ),
-                              ),
-                          ),
-                        ),
+                          // Car was moved up to fix depth sorting
                       ],
                     );
                     },
@@ -2376,7 +2504,8 @@ class _PomodoroHomeState extends State<PomodoroHome>
         final prefs = await SharedPreferences.getInstance();
         String equippedCarId = prefs.getString('equipped_garaj') ?? 'car1';
         List<String> eqTrees = prefs.getStringList('equipped_trees') ?? ['tree1', 'tree2', 'tree3'];
-        List<String> eqCalilar = prefs.getStringList('equipped_calilar') ?? ['bush0', 'rock0'];
+        List<String> eqCalilar = prefs.getStringList('equipped_calilar') ?? ['bush0'];
+        List<String> eqKayalar = prefs.getStringList('equipped_kayalar') ?? ['rock0'];
         setState(() {
           final equippedCar = allShopItems.firstWhere(
             (item) => item.id == equippedCarId, 
@@ -2386,19 +2515,18 @@ class _PomodoroHomeState extends State<PomodoroHome>
           _equippedCarScale = equippedCar.imageScale;
           _activeTrees = eqTrees;
           _activeCalilar = eqCalilar;
+          _activeKayalar = eqKayalar;
 
           // Dağdaki ağaçların ve çalıların hemen güncellenmesi için indekslerini yenile
           for (var tree in _trees) {
             tree.assetIndex = _random.nextInt(eqTrees.isNotEmpty ? eqTrees.length : 1);
           }
-          for (var bush in _bushes) {
-            bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
-          }
-          for (var bush in _bushes2) {
-            bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
-          }
-          for (var bush in _bushes3) {
-            bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+          for (var bush in [..._bushes, ..._bushes2, ..._bushes3]) {
+            if (bush.isRock) {
+              bush.assetIndex = _random.nextInt(eqKayalar.isNotEmpty ? eqKayalar.length : 1);
+            } else {
+              bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+            }
           }
         });
       },
@@ -4157,10 +4285,13 @@ class DistantMountainPainter extends CustomPainter {
 }
 
 class ModernMountainPainter extends CustomPainter {
+  final Color color;
+  ModernMountainPainter({this.color = const Color(0xFF4CAF50)});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF4CAF50)
+      ..color = color
       ..style = PaintingStyle.fill;
 
     final path = Path();
@@ -4196,6 +4327,24 @@ class MountainClipClipper extends CustomClipper<Path> {
     path.lineTo(size.width, 0);                  // Go up the right side to the top
     path.close();                                // Close back to top-left (0,0)
     
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+// A CustomClipper that matches the ModernMountainPainter exactly
+// to clip an image to the slope area.
+class GrassClipClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.moveTo(0, size.height);
+    path.lineTo(0, size.height - 80); 
+    path.lineTo(size.width, size.height - 200); 
+    path.lineTo(size.width, size.height);
+    path.close();
     return path;
   }
 

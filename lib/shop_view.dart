@@ -124,24 +124,69 @@ final List<ShopItem> allShopItems = [
     ShopItem(id: 'tree_mac4', category: 'yol', name: 'Sauco Ağacı', price: 250, imagePath: 'assets/tree/Sauco Ağacı.png', color: Colors.green),
     
     // Çalılar
-    ShopItem(id: 'bush0', category: 'gokyuzu', name: 'Başlangıç Çalısı', price: 0,  imagePath: 'assets/bush/bush.png',  color: Colors.green),
-    ShopItem(id: 'bush1', category: 'gokyuzu', name: 'Çalı 1',           price: 5,  imagePath: 'assets/bush/bush1.png', color: Colors.green),
-    ShopItem(id: 'bush2', category: 'gokyuzu', name: 'Çalı 2',           price: 8,  imagePath: 'assets/bush/bush2.png', color: Colors.green),
-    ShopItem(id: 'bush3', category: 'gokyuzu', name: 'Çalı 3',           price: 12, imagePath: 'assets/bush/bush3.png', color: Colors.green),
-    ShopItem(id: 'bush4', category: 'gokyuzu', name: 'Çalı 4',           price: 16, imagePath: 'assets/bush/bush4.png', color: Colors.green),
-    ShopItem(id: 'bush5', category: 'gokyuzu', name: 'Çalı 5',           price: 20, imagePath: 'assets/bush/bush5.png', color: Colors.green),
-    ShopItem(id: 'bush6', category: 'gokyuzu', name: 'Çalı 6',           price: 25, imagePath: 'assets/bush/bush6.png', color: Colors.green),
-    ShopItem(id: 'bush7', category: 'gokyuzu', name: 'Çalı 7',           price: 30, imagePath: 'assets/bush/bush7.png', color: Colors.green),
-    ShopItem(id: 'bush8', category: 'gokyuzu', name: 'Çalı 8',           price: 35, imagePath: 'assets/bush/bush8.png', color: Colors.green),
+    ShopItem(id: 'bush0', category: 'cali', name: 'Başlangıç Çalısı', price: 0,  imagePath: 'assets/bush/bush.png',  color: Colors.green),
+    ShopItem(id: 'bush1', category: 'cali', name: 'Çalı 1',           price: 5,  imagePath: 'assets/bush/bush1.png', color: Colors.green),
+    ShopItem(id: 'bush2', category: 'cali', name: 'Çalı 2',           price: 8,  imagePath: 'assets/bush/bush2.png', color: Colors.green),
+    ShopItem(id: 'bush3', category: 'cali', name: 'Çalı 3',           price: 12, imagePath: 'assets/bush/bush3.png', color: Colors.green),
+    ShopItem(id: 'bush7', category: 'cali', name: 'Çalı 4',           price: 16, imagePath: 'assets/bush/bush7.png', color: Colors.green),
+    ShopItem(id: 'bush8', category: 'cali', name: 'Çalı 5',           price: 20, imagePath: 'assets/bush/bush8.png', color: Colors.green),
+    
+    // Tema Çalıları (Sakura)
+    ShopItem(id: 'sakura_bush1', category: 'cali', name: 'Başlangıç Sakurası', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Başlangıç Sakurası.png', color: Colors.pinkAccent),
+    ShopItem(id: 'sakura_bush2', category: 'cali', name: 'Bulut Sakura', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Bulut Sakura.png', color: Colors.pinkAccent),
+    ShopItem(id: 'sakura_bush3', category: 'cali', name: 'Gelişmiş Sakura Çalısı', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Gelişmiş Sakura Çalısı.png', color: Colors.pinkAccent),
+    ShopItem(id: 'sakura_bush4', category: 'cali', name: 'Nadir Beyaz Sakura', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Nadir Beyaz Sakura.png', color: Colors.pinkAccent),
+    ShopItem(id: 'sakura_bush5', category: 'cali', name: 'Yoğun Koyu Pembe Sakura', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Yoğun Koyu Pembe Sakura.png', color: Colors.pinkAccent),
+
+    // Tema Çalıları (Mısır)
+    ShopItem(id: 'misir_bush1', category: 'cali', name: 'Kaktüs', price: 250, imagePath: 'assets/bush/misir_bush_and_rock/kaktus.png', color: Colors.amber),
+    ShopItem(id: 'misir_bush2', category: 'cali', name: 'Kuru Çalı', price: 250, imagePath: 'assets/bush/misir_bush_and_rock/kuru_cali.png', color: Colors.amber),
+    ShopItem(id: 'misir_bush3', category: 'cali', name: 'Papirüs Demeti', price: 250, imagePath: 'assets/bush/misir_bush_and_rock/papirus_demeti.png', color: Colors.amber),
+
+    // Tema Çalıları (İskandinavya)
+    ShopItem(id: 'isk_bush1', category: 'cali', name: 'Bodur Huş Ağacı', price: 250, imagePath: 'assets/bush/iskandinavya_Bush_and_Rock/bodur_hus.png', color: Colors.cyan),
+    ShopItem(id: 'isk_bush2', category: 'cali', name: 'Kar Kaplı Ardıç', price: 250, imagePath: 'assets/bush/iskandinavya_Bush_and_Rock/ardic_dali.png', color: Colors.cyan),
+    ShopItem(id: 'isk_bush3', category: 'cali', name: 'Kar Kaplı Funda', price: 250, imagePath: 'assets/bush/iskandinavya_Bush_and_Rock/funda_calisi.png', color: Colors.cyan),
+    ShopItem(id: 'isk_bush4', category: 'cali', name: 'Eğrelti ve Yaban Mersini', price: 250, imagePath: 'assets/bush/iskandinavya_Bush_and_Rock/egrelti_yaban_mersini.png', color: Colors.cyan),
+
+    // Tema Çalıları (Machu Picchu)
+    ShopItem(id: 'mac_bush1', category: 'cali', name: 'And Eğrelti Otu', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/and_egrelti.png', color: Colors.green),
+    ShopItem(id: 'mac_bush2', category: 'cali', name: 'Miconia Yaprakları', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/miconia.png', color: Colors.green),
+    ShopItem(id: 'mac_bush3', category: 'cali', name: 'Yabani And Orkidesi', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/and_orkidesi.png', color: Colors.green),
+    ShopItem(id: 'mac_bush4', category: 'cali', name: 'And Küpesi', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/and_kupesi.png', color: Colors.green),
+    ShopItem(id: 'mac_bush5', category: 'cali', name: 'Machu Picchu Bromeliad', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/mp_bromeliad.png', color: Colors.green),
+    ShopItem(id: 'mac_bush6', category: 'cali', name: 'Yerli Podocarpus', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/podocarpus.png', color: Colors.green),
 
     // Kayalar
-    ShopItem(id: 'rock0', category: 'gokyuzu', name: 'Başlangıç Kayası', price: 0,  imagePath: 'assets/bush/rock.png',  color: Colors.brown),
-    ShopItem(id: 'rock1', category: 'gokyuzu', name: 'Kaya 1',           price: 8,  imagePath: 'assets/bush/rock1.png', color: Colors.brown),
-    ShopItem(id: 'rock2', category: 'gokyuzu', name: 'Kaya 2',           price: 12, imagePath: 'assets/bush/rock2.png', color: Colors.brown),
-    ShopItem(id: 'rock3', category: 'gokyuzu', name: 'Kaya 3',           price: 18, imagePath: 'assets/bush/rock3.png', color: Colors.brown),
-    ShopItem(id: 'rock4', category: 'gokyuzu', name: 'Kaya 4',           price: 25, imagePath: 'assets/bush/rock4.png', color: Colors.brown),
-    ShopItem(id: 'rock5', category: 'gokyuzu', name: 'Kaya 5',           price: 35, imagePath: 'assets/bush/rock5.png', color: Colors.brown),
+    ShopItem(id: 'rock0', category: 'kaya', name: 'Başlangıç Kayası', price: 0,  imagePath: 'assets/bush/rock.png',  color: Colors.brown),
     
+    // Tema Kayaları (Sakura)
+    ShopItem(id: 'sakura_rock1', category: 'kaya', name: 'Doğal Bahçe Taşı', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Doğal Bahçe Taşı.png', color: Colors.grey),
+    ShopItem(id: 'sakura_rock2', category: 'kaya', name: 'Sakura Su Havuzu', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Sakura Su Havuzu.png', color: Colors.grey),
+    ShopItem(id: 'sakura_rock3', category: 'kaya', name: 'Sakura Taş Feneri', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Sakura Taş Feneri.png', color: Colors.grey),
+    ShopItem(id: 'sakura_rock4', category: 'kaya', name: 'Sakura Taş Köprü', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Sakura Taş Köprü.png', color: Colors.grey),
+    ShopItem(id: 'sakura_rock5', category: 'kaya', name: 'Sakura Çakıl Paketi', price: 250, imagePath: 'assets/bush/Sakura_Bush_and_rock/Sakura Çakıl Paketi.png', color: Colors.grey),
+    
+    // Tema Kayaları (Mısır)
+    ShopItem(id: 'misir_rock1', category: 'kaya', name: 'Hiyeroglif Taşı', price: 250, imagePath: 'assets/bush/misir_bush_and_rock/hiyeroglif_tasi.png', color: Colors.amber),
+    ShopItem(id: 'misir_rock2', category: 'kaya', name: 'Kaya Yığını', price: 250, imagePath: 'assets/bush/misir_bush_and_rock/kaya_yigini.png', color: Colors.amber),
+    ShopItem(id: 'misir_rock3', category: 'kaya', name: 'Sütun Kaidesi', price: 250, imagePath: 'assets/bush/misir_bush_and_rock/sutun_kaidesi.png', color: Colors.amber),
+    ShopItem(id: 'misir_rock4', category: 'kaya', name: 'Oturan Kedi', price: 250, imagePath: 'assets/bush/misir_bush_and_rock/oturan_kedi.png', color: Colors.amber),
+    ShopItem(id: 'misir_rock5', category: 'kaya', name: 'Yatan Kedi', price: 250, imagePath: 'assets/bush/misir_bush_and_rock/yatan_kedi.png', color: Colors.amber),
+
+    // Tema Kayaları (İskandinavya)
+    ShopItem(id: 'isk_rock1', category: 'kaya', name: 'Kar Kaplı Kaya', price: 250, imagePath: 'assets/bush/iskandinavya_Bush_and_Rock/karli_kaya.png', color: Colors.cyan),
+    ShopItem(id: 'isk_rock2', category: 'kaya', name: 'Savaş Baltası', price: 250, imagePath: 'assets/bush/iskandinavya_Bush_and_Rock/savas_baltasi.png', color: Colors.cyan),
+    ShopItem(id: 'isk_rock3', category: 'kaya', name: 'Ejderha Rünü', price: 250, imagePath: 'assets/bush/iskandinavya_Bush_and_Rock/ejderha_runu.png', color: Colors.cyan),
+    ShopItem(id: 'isk_rock4', category: 'kaya', name: 'FRI Rünü', price: 250, imagePath: 'assets/bush/iskandinavya_Bush_and_Rock/fri_runu.png', color: Colors.cyan),
+
+    // Tema Kayaları (Machu Picchu)
+    ShopItem(id: 'mac_rock1', category: 'kaya', name: 'And Teras Duvarı 1', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/and_teras_1.png', color: Colors.green),
+    ShopItem(id: 'mac_rock2', category: 'kaya', name: 'And Teras Duvarı 2', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/and_teras_2.png', color: Colors.green),
+    ShopItem(id: 'mac_rock3', category: 'kaya', name: 'And Teras Duvarı 3', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/and_teras_3.png', color: Colors.green),
+    ShopItem(id: 'mac_rock4', category: 'kaya', name: 'And Teras Duvarı 4', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/and_teras_4.png', color: Colors.green),
+    ShopItem(id: 'mac_rock5', category: 'kaya', name: 'And Teras Duvarı 5', price: 250, imagePath: 'assets/bush/Machu_Pichu_Bush_and_rock/and_teras_5.png', color: Colors.green),
+
     // Ses: Arka Plan Müzikleri (Teyp)
     // Ücretsiz
     ShopItem(id: 'assets/sounds/back/creatorarts-relaxing-heavy-rain-sounds-on-roof-perfect-for-sleep-focus-323383.mp3', category: 'teyp', name: 'Yoğun Yağmur', price: 0, icon: Icons.thunderstorm, color: Colors.indigo),
@@ -204,8 +249,11 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
   List<String> unlockedTrees = ['tree19', 'tree20', 'tree21'];
   List<String> equippedTrees = ['tree19', 'tree20', 'tree21'];
 
-  List<String> unlockedCalilar = ['bush0', 'rock0'];
-  List<String> equippedCalilar = ['bush0', 'rock0'];
+  List<String> unlockedCalilar = ['bush0'];
+  List<String> equippedCalilar = ['bush0'];
+
+  List<String> unlockedKayalar = ['rock0'];
+  List<String> equippedKayalar = ['rock0'];
 
   @override
   void initState() {
@@ -247,8 +295,11 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
       unlockedTrees = prefs.getStringList('unlocked_trees') ?? ['tree19', 'tree20', 'tree21'];
       equippedTrees = prefs.getStringList('equipped_trees') ?? ['tree19', 'tree20', 'tree21'];
       
-      unlockedCalilar = prefs.getStringList('unlocked_calilar') ?? ['bush0', 'rock0'];
-      equippedCalilar = prefs.getStringList('equipped_calilar') ?? ['bush0', 'rock0'];
+      unlockedCalilar = prefs.getStringList('unlocked_calilar') ?? ['bush0'];
+      equippedCalilar = prefs.getStringList('equipped_calilar') ?? ['bush0'];
+
+      unlockedKayalar = prefs.getStringList('unlocked_kayalar') ?? ['rock0'];
+      equippedKayalar = prefs.getStringList('equipped_kayalar') ?? ['rock0'];
       
       // Default equipped logic or loading from prefs
       _equippedItems['garaj'] = prefs.getString('equipped_garaj') ?? 'car1';
@@ -260,20 +311,44 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
         for (var t in ['tree_sakura1', 'tree_sakura2', 'tree_sakura3', 'tree_sakura4']) {
           if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
         }
+        for (var b in ['sakura_bush1', 'sakura_bush2', 'sakura_bush3', 'sakura_bush4', 'sakura_bush5']) {
+          if (!unlockedCalilar.contains(b)) unlockedCalilar.add(b);
+        }
+        for (var r in ['sakura_rock1', 'sakura_rock2', 'sakura_rock3', 'sakura_rock4', 'sakura_rock5']) {
+          if (!unlockedKayalar.contains(r)) unlockedKayalar.add(r);
+        }
       }
       if (_purchasedItems.contains('Mısır')) {
         for (var t in ['tree_misir1', 'tree_misir2', 'tree_misir3', 'tree_misir4']) {
           if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+        }
+        for (var b in ['misir_bush1', 'misir_bush2', 'misir_bush3']) {
+          if (!unlockedCalilar.contains(b)) unlockedCalilar.add(b);
+        }
+        for (var r in ['misir_rock1', 'misir_rock2', 'misir_rock3', 'misir_rock4', 'misir_rock5']) {
+          if (!unlockedKayalar.contains(r)) unlockedKayalar.add(r);
         }
       }
       if (_purchasedItems.contains('İskandinavya')) {
         for (var t in ['tree_isk1', 'tree_isk2', 'tree_isk3', 'tree_isk4']) {
           if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
         }
+        for (var b in ['isk_bush1', 'isk_bush2', 'isk_bush3', 'isk_bush4']) {
+          if (!unlockedCalilar.contains(b)) unlockedCalilar.add(b);
+        }
+        for (var r in ['isk_rock1', 'isk_rock2', 'isk_rock3', 'isk_rock4']) {
+          if (!unlockedKayalar.contains(r)) unlockedKayalar.add(r);
+        }
       }
       if (_purchasedItems.contains('Machu Picchu')) {
         for (var t in ['tree_mac1', 'tree_mac2', 'tree_mac3', 'tree_mac4']) {
           if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+        }
+        for (var b in ['mac_bush1', 'mac_bush2', 'mac_bush3', 'mac_bush4', 'mac_bush5', 'mac_bush6']) {
+          if (!unlockedCalilar.contains(b)) unlockedCalilar.add(b);
+        }
+        for (var r in ['mac_rock1', 'mac_rock2', 'mac_rock3', 'mac_rock4', 'mac_rock5']) {
+          if (!unlockedKayalar.contains(r)) unlockedKayalar.add(r);
         }
       }
     });
@@ -284,6 +359,7 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
     await prefs.setStringList('purchased_items', _purchasedItems);
     await prefs.setStringList('unlocked_trees', unlockedTrees);
     await prefs.setStringList('unlocked_calilar', unlockedCalilar);
+    await prefs.setStringList('unlocked_kayalar', unlockedKayalar);
   }
 
   Future<void> _saveEquips() async {
@@ -294,6 +370,7 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
     
     await prefs.setStringList('equipped_trees', equippedTrees);
     await prefs.setStringList('equipped_calilar', equippedCalilar);
+    await prefs.setStringList('equipped_kayalar', equippedKayalar);
     
     widget.onEquipAction(); // Notify parent
   }
@@ -350,8 +427,10 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
                   setState(() {
                     if (item.category == 'yol') {
                       unlockedTrees.add(item.id);
-                    } else if (item.category == 'gokyuzu') {
+                    } else if (item.category == 'cali') {
                       unlockedCalilar.add(item.id);
+                    } else if (item.category == 'kaya') {
+                      unlockedKayalar.add(item.id);
                     } else {
                       _purchasedItems.add(item.id);
                       
@@ -361,20 +440,52 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
                         for (var t in sakuraTrees) {
                           if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
                         }
+                        var sakuraBushes = ['sakura_bush1', 'sakura_bush2', 'sakura_bush3', 'sakura_bush4', 'sakura_bush5'];
+                        for (var b in sakuraBushes) {
+                          if (!unlockedCalilar.contains(b)) unlockedCalilar.add(b);
+                        }
+                        var sakuraRocks = ['sakura_rock1', 'sakura_rock2', 'sakura_rock3', 'sakura_rock4', 'sakura_rock5'];
+                        for (var r in sakuraRocks) {
+                          if (!unlockedKayalar.contains(r)) unlockedKayalar.add(r);
+                        }
                       } else if (item.id == 'Mısır') {
                         var misirTrees = ['tree_misir1', 'tree_misir2', 'tree_misir3', 'tree_misir4'];
                         for (var t in misirTrees) {
                           if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+                        }
+                        var misirBushes = ['misir_bush1', 'misir_bush2', 'misir_bush3'];
+                        for (var b in misirBushes) {
+                          if (!unlockedCalilar.contains(b)) unlockedCalilar.add(b);
+                        }
+                        var misirRocks = ['misir_rock1', 'misir_rock2', 'misir_rock3', 'misir_rock4', 'misir_rock5'];
+                        for (var r in misirRocks) {
+                          if (!unlockedKayalar.contains(r)) unlockedKayalar.add(r);
                         }
                       } else if (item.id == 'İskandinavya') {
                         var iskTrees = ['tree_isk1', 'tree_isk2', 'tree_isk3', 'tree_isk4'];
                         for (var t in iskTrees) {
                           if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
                         }
+                        var iskBushes = ['isk_bush1', 'isk_bush2', 'isk_bush3', 'isk_bush4'];
+                        for (var b in iskBushes) {
+                          if (!unlockedCalilar.contains(b)) unlockedCalilar.add(b);
+                        }
+                        var iskRocks = ['isk_rock1', 'isk_rock2', 'isk_rock3', 'isk_rock4'];
+                        for (var r in iskRocks) {
+                          if (!unlockedKayalar.contains(r)) unlockedKayalar.add(r);
+                        }
                       } else if (item.id == 'Machu Picchu') {
                         var macTrees = ['tree_mac1', 'tree_mac2', 'tree_mac3', 'tree_mac4'];
                         for (var t in macTrees) {
                           if (!unlockedTrees.contains(t)) unlockedTrees.add(t);
+                        }
+                        var macBushes = ['mac_bush1', 'mac_bush2', 'mac_bush3', 'mac_bush4', 'mac_bush5', 'mac_bush6'];
+                        for (var b in macBushes) {
+                          if (!unlockedCalilar.contains(b)) unlockedCalilar.add(b);
+                        }
+                        var macRocks = ['mac_rock1', 'mac_rock2', 'mac_rock3', 'mac_rock4', 'mac_rock5'];
+                        for (var r in macRocks) {
+                          if (!unlockedKayalar.contains(r)) unlockedKayalar.add(r);
                         }
                       }
                     }
@@ -413,12 +524,20 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
       if (item.category == 'tema') {
         if (item.id == 'Japon') {
           equippedTrees = ['tree_sakura1', 'tree_sakura2', 'tree_sakura3', 'tree_sakura4'];
+          equippedCalilar = ['sakura_bush1', 'sakura_bush2', 'sakura_bush3', 'sakura_bush4', 'sakura_bush5'];
+          equippedKayalar = ['sakura_rock1', 'sakura_rock2', 'sakura_rock3', 'sakura_rock4', 'sakura_rock5'];
         } else if (item.id == 'Mısır') {
           equippedTrees = ['tree_misir1', 'tree_misir2', 'tree_misir3', 'tree_misir4'];
+          equippedCalilar = ['misir_bush1', 'misir_bush2', 'misir_bush3'];
+          equippedKayalar = ['misir_rock1', 'misir_rock2', 'misir_rock3', 'misir_rock4', 'misir_rock5'];
         } else if (item.id == 'İskandinavya') {
           equippedTrees = ['tree_isk1', 'tree_isk2', 'tree_isk3', 'tree_isk4'];
+          equippedCalilar = ['isk_bush1', 'isk_bush2', 'isk_bush3', 'isk_bush4'];
+          equippedKayalar = ['isk_rock1', 'isk_rock2', 'isk_rock3', 'isk_rock4'];
         } else if (item.id == 'Machu Picchu') {
           equippedTrees = ['tree_mac1', 'tree_mac2', 'tree_mac3', 'tree_mac4'];
+          equippedCalilar = ['mac_bush1', 'mac_bush2', 'mac_bush3', 'mac_bush4', 'mac_bush5', 'mac_bush6'];
+          equippedKayalar = ['mac_rock1', 'mac_rock2', 'mac_rock3', 'mac_rock4', 'mac_rock5'];
         }
       }
     });
@@ -457,7 +576,7 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
     if (equippedCalilar.length >= 5) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Tepede en fazla 5 çalı veya kaya sergileyebilirsiniz. Lütfen önce birini çıkarın.'),
+          content: Text('Tepede en fazla 5 çalı sergileyebilirsiniz. Lütfen önce birini çıkarın.'),
           backgroundColor: Colors.red,
           duration: Duration(seconds: 2),
         ),
@@ -473,6 +592,30 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
   void _unequipCali(ShopItem item) {
     setState(() {
       equippedCalilar.remove(item.id);
+    });
+    _saveEquips();
+  }
+
+  void _equipKaya(ShopItem item) {
+    if (equippedKayalar.length >= 5) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Tepede en fazla 5 kaya sergileyebilirsiniz. Lütfen önce birini çıkarın.'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      equippedKayalar.add(item.id);
+    });
+    _saveEquips();
+  }
+
+  void _unequipKaya(ShopItem item) {
+    setState(() {
+      equippedKayalar.remove(item.id);
     });
     _saveEquips();
   }
@@ -510,17 +653,22 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
 
   Widget _buildItemCard(ShopItem item) {
     bool isTree = item.category == 'yol';
-    bool isCali = item.category == 'gokyuzu';
+    bool isCali = item.category == 'cali';
+    bool isKaya = item.category == 'kaya';
     bool isPurchased = isTree 
         ? unlockedTrees.contains(item.id) 
         : (isCali 
             ? unlockedCalilar.contains(item.id) 
-            : (_purchasedItems.contains(item.id) || item.price == 0));
+            : (isKaya
+                ? unlockedKayalar.contains(item.id)
+                : (_purchasedItems.contains(item.id) || item.price == 0)));
     bool isEquipped = isTree 
         ? equippedTrees.contains(item.id) 
         : (isCali 
             ? equippedCalilar.contains(item.id) 
-            : _equippedItems[item.category] == item.id);
+            : (isKaya
+                ? equippedKayalar.contains(item.id)
+                : _equippedItems[item.category] == item.id));
     bool isMusic = item.category == 'teyp' || item.category == 'alarm';
 
     return GestureDetector(
@@ -538,6 +686,12 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
             _unequipCali(item);
           } else {
             _equipCali(item);
+          }
+        } else if (isKaya) {
+          if (isEquipped) {
+            _unequipKaya(item);
+          } else {
+            _equipKaya(item);
           }
         } else if (!isEquipped) {
           _equipItem(item);
@@ -767,6 +921,41 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
     );
   }
 
+  Widget _buildCaliKayaTab() {
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        children: [
+          // Inner TabBar
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: TabBar(
+              labelColor: Theme.of(context).primaryColor,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Theme.of(context).primaryColor,
+              indicatorWeight: 3,
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+              tabs: const [
+                Tab(text: '🌿 Çalılar'),
+                Tab(text: '🪨 Kayalar'),
+              ],
+            ),
+          ),
+          // Inner TabBarView
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildGridForCategory('cali'),
+                _buildGridForCategory('kaya'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSesTab() {
     return DefaultTabController(
       length: 2,
@@ -879,7 +1068,7 @@ class _ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin
         children: [
           _buildGridForCategory('garaj'),
           _buildGridForCategory('yol'),
-          _buildGridForCategory('gokyuzu'),
+          _buildCaliKayaTab(),
           _buildSesTab(),
           _buildGridForCategory('tema'),
         ],
