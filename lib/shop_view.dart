@@ -271,6 +271,12 @@ class ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin 
   final AudioPlayer _previewPlayer = AudioPlayer();
   String? _currentlyPlayingId;
   
+  void switchTab(int index) {
+    if (mounted && _tabController.length > index) {
+      _tabController.animateTo(index);
+    }
+  }
+  
   List<String> _purchasedItems = [];
   Map<String, String> _equippedItems = {};
 
@@ -1181,6 +1187,7 @@ class ShopViewState extends State<ShopView> with SingleTickerProviderStateMixin 
                   color: Colors.white.withValues(alpha: 0.2), // Pill background for active tab
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
+                splashBorderRadius: BorderRadius.circular(20), // Match the ripple effect shape to the indicator
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                 unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

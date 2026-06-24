@@ -65,7 +65,7 @@ class MachuPicchuBottomNavBar extends StatelessWidget {
         Positioned.fill(
           child: ClipRect(
             child: Transform.translate(
-              offset: const Offset(0, 3), // Shift up slightly from previous value
+              offset: const Offset(0, -5), // Shift up slightly from previous value
               child: Transform.scale(
                 scale: 1.15, // Enlarge background for Machu Picchu
                 child: Image.asset(

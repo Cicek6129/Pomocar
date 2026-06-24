@@ -12,7 +12,7 @@ class MisirBottomNavBar extends StatelessWidget {
   });
 
   /// İnce çizgili pasif PNG'leri koyu altın silüete çevirir (krem zeminde net).
-  static const Color _passiveTint = Color(0xFF3E2723); // Dark chocolate brown
+  static const Color _passiveTint = Color(0xFF140C07); // Very dark brown/almost black for max contrast
 
   /// Çubuk yüksekliği Japan ile aynı; büyüme yalnızca ikon ölçeğinde.
   static const double _barHeight = 56;
@@ -58,10 +58,14 @@ class MisirBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/Cards/egypt_icons_background.png'),
+          image: const AssetImage('assets/Cards/egypt_icons_background.png'),
           fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.black.withValues(alpha: 0.25), // Darken the background so it's not too light
+            BlendMode.darken,
+          ),
         ),
       ),
       child: Material(
@@ -177,12 +181,27 @@ class _MisirNavIcon extends StatelessWidget {
     Widget finalImage;
 
     if (!isSelected) {
-      finalImage = ColorFiltered(
-        colorFilter: const ColorFilter.mode(
-          MisirBottomNavBar._passiveTint,
-          BlendMode.srcIn,
-        ),
-        child: image,
+      finalImage = Stack(
+        alignment: Alignment.center,
+        children: [
+          Transform.translate(
+            offset: const Offset(1.0, 1.0),
+            child: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0x99FFFFFF), // Light/white shadow to make the dark icon pop
+                BlendMode.srcIn,
+              ),
+              child: image,
+            ),
+          ),
+          ColorFiltered(
+            colorFilter: const ColorFilter.mode(
+              MisirBottomNavBar._passiveTint,
+              BlendMode.srcIn,
+            ),
+            child: image,
+          ),
+        ],
       );
     } else {
       // Active icon is yellow, so it needs a strong dark shadow to pop from the yellow/tan bricks

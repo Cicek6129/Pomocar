@@ -17,7 +17,6 @@ class IskandinavyaBottomNavBar extends StatelessWidget {
   static const double _barHeight = 56;
   static const double _slotSize = 48;
   static const double _baseIconSize = 34;
-  static const double _defaultPassiveScale = 1.92;
 
   /// İkonları üst kenardan uzaklaştırıp dikey ortalar.
   static const double _iconVerticalOffset = -2;
@@ -62,26 +61,18 @@ class IskandinavyaBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Scaled background image
-        Positioned.fill(
-          child: ClipRect(
-            child: Transform.translate(
-              offset: const Offset(0, 20), // Shift down further
-              child: Transform.scale(
-                scale: 1.3, // Enlarge background more than Machu Picchu
-                child: Image.asset(
-                  'assets/Cards/isk_icons_background.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
+    return Material(
+      color: _barBackground,
+      child: Container(
+        decoration: BoxDecoration(
+          color: _barBackground,
+          border: Border(
+            top: BorderSide(
+              color: const Color(0xFF00ACC1).withValues(alpha: 0.22),
+              width: 1,
             ),
           ),
         ),
-        // Nav items
-        Material(
-          color: Colors.transparent,
         child: SafeArea(
           top: false,
           child: SizedBox(
@@ -104,8 +95,7 @@ class IskandinavyaBottomNavBar extends StatelessWidget {
             ),
           ),
         ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -133,7 +123,7 @@ class _IskNavItem extends StatelessWidget {
         isSelected ? item.activeScale : item.passiveScale;
 
     return Material(
-      color: Colors.transparent,
+      color: IskandinavyaBottomNavBar._barBackground,
       child: InkWell(
         onTap: onTap,
         splashColor: const Color(0xFF00ACC1).withValues(alpha: 0.18),

@@ -1084,8 +1084,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                    onTap: () {
                                      if (isLocked) {
-                                       Navigator.of(context).pop();
-                                       setState(() { _bottomNavIndex = 1; });
+                                       _showLockedSoundDialog(entry.key);
                                      } else {
                                        setDialogState(() {
                                          tempSelectedPath = entry.value;
@@ -1094,8 +1093,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                    },
                                    onLongPress: () {
                                      if (isLocked) {
-                                       Navigator.of(context).pop();
-                                       setState(() { _bottomNavIndex = 1; });
+                                       _showLockedSoundDialog(entry.key);
                                      } else {
                                        setDialogState(() {
                                          tempSelectedPath = entry.value;
@@ -1173,6 +1171,56 @@ class _PomodoroHomeState extends State<PomodoroHome>
     ).then((_) {
       _previewPlayer.stop();
     });
+  }
+
+  void _showLockedSoundDialog(String itemName) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            'Kilitli Ses',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            'Lütfen bu sesi (\'$itemName\') kullanabilmek için Mağazadan satın alın.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 16),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.grey.shade800),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Kapat', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop(); // Close music selection dialog
+                setState(() { _bottomNavIndex = 1; }); // Switch to Shop tab (Market is index 1)
+                
+                // Switch to "Ses" tab in ShopView (Index 3 is 'Ses')
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  shopViewKey.currentState?.switchTab(3);
+                });
+              },
+              child: const Text('Mağazaya Git', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      }
+    );
   }
 
   void _showWeatherSelectionDialog() {
@@ -1331,10 +1379,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
                   _workTimeInMinutes = breakDuration;
                   _totalSeconds = breakDuration * 60;
                   _secondsRemaining = _totalSeconds;
+                  _secondsRemainingNotifier.value = _secondsRemaining;
                 });
               },
-              // Update button text to match duration dynamically
-              child: Text(isLongBreak ? 'Başla ($breakDuration dk)' : 'Evet, Mola Ver', style: const TextStyle(fontWeight: FontWeight.w500)),
+              child: const Text('Tamam', style: TextStyle(fontWeight: FontWeight.w500)),
             ),
           ],
         );
@@ -1396,10 +1444,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
                     _workTimeInMinutes = timerSettings.focusDuration;
                     _totalSeconds = _workTimeInMinutes * 60;
                     _secondsRemaining = _totalSeconds;
+                    _secondsRemainingNotifier.value = _secondsRemaining;
                 });
-                _startTimer();
               },
-              child: const Text('Başla', style: const TextStyle(fontWeight: FontWeight.w500)),
+              child: const Text('Tamam', style: TextStyle(fontWeight: FontWeight.w500)),
             ),
           ],
         );
@@ -1428,13 +1476,15 @@ class _PomodoroHomeState extends State<PomodoroHome>
           backgroundColor: const Color(0xFFF3F4F6), 
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           title: Text(
-            'Zamanlayıcıyı Yeniden Başlat',
+            _isBreakMode ? 'Molayı Yeniden Başlat' : 'Zamanlayıcıyı Yeniden Başlat',
             style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
-          content: const Text(
-            'Zamanlayıcıyı yeniden başlatmak istediğinizden emin misiniz?',
-            style: TextStyle(color: Color(0xFF37474F), fontSize: 14),
+          content: Text(
+            _isBreakMode 
+              ? 'Molayı baştan başlatmak istediğinize emin misiniz?' 
+              : 'Zamanlayıcıyı yeniden başlatmak istediğinizden emin misiniz?',
+            style: const TextStyle(color: Color(0xFF37474F), fontSize: 14),
             textAlign: TextAlign.center,
           ),
           actionsAlignment: MainAxisAlignment.spaceEvenly,
@@ -1474,13 +1524,15 @@ class _PomodoroHomeState extends State<PomodoroHome>
           backgroundColor: const Color(0xFFF3F4F6), 
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           title: Text(
-            'Oturumu Sonlandır',
+            _isBreakMode ? 'Molayı Bitir' : 'Oturumu Sonlandır',
             style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
-          content: const Text(
-            'Zamanlayıcıyı kapatmak istediğinizden emin misiniz? Devam eden bu oturum kaydedilmeyecektir.',
-            style: TextStyle(color: Color(0xFF37474F), fontSize: 14, height: 1.4),
+          content: Text(
+            _isBreakMode
+              ? 'Molayı erken bitirmek istediğinizden emin misiniz?'
+              : 'Zamanlayıcıyı kapatmak istediğinizden emin misiniz? Devam eden bu oturum kaydedilmeyecektir.',
+            style: const TextStyle(color: Color(0xFF37474F), fontSize: 14, height: 1.4),
             textAlign: TextAlign.center,
           ),
           actionsAlignment: MainAxisAlignment.spaceEvenly,
@@ -1502,6 +1554,11 @@ class _PomodoroHomeState extends State<PomodoroHome>
               ),
               onPressed: () {
                   Navigator.of(context).pop();
+                  if (_isBreakMode) {
+                    setState(() {
+                      _isBreakMode = false;
+                    });
+                  }
                   _resetTimer();
               },
               child: const Text('Tamam', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), 
@@ -1804,6 +1861,13 @@ class _PomodoroHomeState extends State<PomodoroHome>
       _ => null,
     };
     final bool hasThemeBackground = themeBackgroundPath != null;
+    
+    final Color timerTextColor = switch (themeSettings.activeColorTheme) {
+      'Machu Picchu' => const Color(0xFFF1F8E9), // Light green-white for contrast
+      'Derin Uzay' => const Color(0xFFE0F7FA), // Light cyan-white for contrast
+      'İskandinavya' => const Color(0xFFE0F7FA), // Light icy-white for contrast
+      _ => const Color(0xFF37474F), // Default dark grey-blue
+    };
     
     Widget timerContent = GestureDetector(
       onTap: () {
@@ -2380,10 +2444,10 @@ class _PomodoroHomeState extends State<PomodoroHome>
                 builder: (context, secondsRemaining, child) {
                   return Text(
                     _formatTime(secondsRemaining),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 80,
                       fontWeight: FontWeight.w300, 
-                      color: Color(0xFF37474F),     
+                      color: timerTextColor,     
                       letterSpacing: -2,
                     ),
                   );
@@ -3278,6 +3342,9 @@ class _SoundViewState extends State<SoundView> {
                 Navigator.of(context).pop(); // Close dialog
                 Navigator.of(context).pop(); // Close settings/sound views back to main screen
                 widget.onNavigateToMarket?.call();
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  shopViewKey.currentState?.switchTab(3); // Switch to "Ses" tab in Shop
+                });
               },
               child: const Text('Mağazaya Git', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
@@ -3826,8 +3893,13 @@ class _ThemeViewState extends State<ThemeView> {
                        textAlign: TextAlign.center,
                        style: TextStyle(fontSize: 16),
                      ),
-                     actionsAlignment: MainAxisAlignment.center,
+                     actionsAlignment: MainAxisAlignment.spaceEvenly,
                      actions: [
+                       TextButton(
+                         style: TextButton.styleFrom(foregroundColor: Colors.grey.shade800),
+                         onPressed: () => Navigator.of(context).pop(),
+                         child: const Text('Kapat', style: TextStyle(fontWeight: FontWeight.bold)),
+                       ),
                        ElevatedButton(
                          style: ElevatedButton.styleFrom(
                            backgroundColor: Theme.of(context).primaryColor,
@@ -3835,11 +3907,12 @@ class _ThemeViewState extends State<ThemeView> {
                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                          ),
                          onPressed: () {
-                           Navigator.of(context).pop();
-                           shopViewKey.currentState?.switchToThemesTab();
+                           Navigator.of(context).pop(); // Close popup
+                           // No need to pop bottom sheet, ThemeView is in the main settings tab
+                           shopViewKey.currentState?.switchTab(4); // Or switchToThemesTab()
                            widget.onNavigateToMarket?.call();
                          },
-                         child: const Text('Tamam', style: TextStyle(fontWeight: FontWeight.bold)),
+                         child: const Text('Mağazaya Git', style: TextStyle(fontWeight: FontWeight.bold)),
                        ),
                      ],
                    );
