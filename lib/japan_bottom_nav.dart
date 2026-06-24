@@ -14,10 +14,10 @@ class JapanBottomNavBar extends StatelessWidget {
   static const Color _barBackground = Color(0xFFFCE4EC);
   static const Color _passiveTint = Color(0xFFC2185B); // Koyu pembe silüet
 
-  static const double _barHeight = 62;
-  static const double _slotSize = 54;
-  static const double _baseIconSize = 42;
-  static const double _iconVerticalOffset = 7;
+  static const double _barHeight = 56;
+  static const double _slotSize = 48;
+  static const double _baseIconSize = 34;
+  static const double _iconVerticalOffset = -2;
 
   static const List<
       ({
@@ -32,28 +32,28 @@ class JapanBottomNavBar extends StatelessWidget {
       inactive: 'assets/Icons/japan/home_pasif_japan.png',
       activeScale: 2.08,
       passiveScale: 1.92,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/japan/market_aktif_japan.png',
       inactive: 'assets/Icons/japan/market_pasif_japan.png',
       activeScale: 2.12,
       passiveScale: 1.92,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/japan/stats_aktif_japan.png',
       inactive: 'assets/Icons/japan/stats_pasif_japan.png',
       activeScale: 2.08,
       passiveScale: 1.92,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/japan/settings_aktif_japan.png',
       inactive: 'assets/Icons/japan/settings_pasif_japan.png',
       activeScale: 2.08,
       passiveScale: 1.92,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
   ];
 

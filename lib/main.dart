@@ -22,6 +22,8 @@ import 'iskandinavya_bottom_nav.dart';
 import 'machu_picchu_bottom_nav.dart';
 import 'plain_color_themes.dart';
 
+final GlobalKey<ShopViewState> shopViewKey = GlobalKey<ShopViewState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService().init();
@@ -48,12 +50,13 @@ class PomodoroApp extends StatelessWidget {
 
 class TreeModel {
   double x;
+  double yOffset;
   double scale;
   double speed;
   int assetIndex; // Determine which tree image to show
   bool isRock;
 
-  TreeModel({required this.x, required this.scale, required this.speed, required this.assetIndex, this.isRock = false});
+  TreeModel({required this.x, this.yOffset = 0.0, required this.scale, required this.speed, required this.assetIndex, this.isRock = false});
 }
 
 class FocusSession {
@@ -506,6 +509,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
     for (int i = 0; i < 8; i++) {
         _trees.add(TreeModel(
             x: i * 150.0 + _random.nextDouble() * 50,
+            yOffset: _random.nextDouble() * 260 - 130,
             scale: 0.8 + _random.nextDouble() * 0.5, // Random size between 0.8x and 1.3x
             speed: 2.0 + _random.nextDouble() * 0.5, // Slight speed variance for depth
             assetIndex: _random.nextInt(2), // Randomly pick from available tree assets
@@ -517,6 +521,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
         bool isRock = _random.nextDouble() > 0.6;
         _bushes.add(TreeModel(
             x: i * 200.0 + 20.0,
+            yOffset: _random.nextDouble() * 260 - 130,
             scale: !isRock ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2,
             speed: 1.5 + _random.nextDouble() * 0.5,
             assetIndex: 0,
@@ -529,6 +534,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
         bool isRock = _random.nextDouble() > 0.6;
         _bushes2.add(TreeModel(
             x: i * 220.0 + 100.0,
+            yOffset: _random.nextDouble() * 260 - 130,
             scale: !isRock ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2,
             speed: 1.6 + _random.nextDouble() * 0.5,
             assetIndex: 0,
@@ -541,6 +547,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
         bool isRock = _random.nextDouble() > 0.6;
         _bushes3.add(TreeModel(
             x: i * 250.0 + 60.0,
+            yOffset: _random.nextDouble() * 260 - 130,
             scale: !isRock ? 0.9 + _random.nextDouble() * 0.3 : 0.65 + _random.nextDouble() * 0.2,
             speed: 1.7 + _random.nextDouble() * 0.5,
             assetIndex: 0,
@@ -596,14 +603,20 @@ class _PomodoroHomeState extends State<PomodoroHome>
       _activeCalilar = eqCalilar;
       _activeKayalar = eqKayalar;
 
+      if (themeSettings.activeColorTheme == 'Derin Uzay') {
+        _activeTrees.removeWhere((id) => !id.startsWith('planet_') && !id.startsWith('meteor_'));
+        _activeCalilar.removeWhere((id) => !id.startsWith('planet_') && !id.startsWith('meteor_'));
+        _activeKayalar.removeWhere((id) => !id.startsWith('planet_') && !id.startsWith('meteor_'));
+      }
+
       for (var tree in _trees) {
-        tree.assetIndex = _random.nextInt(eqTrees.isNotEmpty ? eqTrees.length : 1);
+        tree.assetIndex = _random.nextInt(_activeTrees.isNotEmpty ? _activeTrees.length : 1);
       }
       for (var bush in [..._bushes, ..._bushes2, ..._bushes3]) {
         if (bush.isRock) {
-          bush.assetIndex = _random.nextInt(eqKayalar.isNotEmpty ? eqKayalar.length : 1);
+          bush.assetIndex = _random.nextInt(_activeKayalar.isNotEmpty ? _activeKayalar.length : 1);
         } else {
-          bush.assetIndex = _random.nextInt(eqCalilar.isNotEmpty ? eqCalilar.length : 1);
+          bush.assetIndex = _random.nextInt(_activeCalilar.isNotEmpty ? _activeCalilar.length : 1);
         }
       }
     });
@@ -936,7 +949,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
+                          color: themeSettings.activeColorTheme == 'Derin Uzay' ? Colors.indigoAccent : Theme.of(context).primaryColor,
                         ),
                       ),
                     ),
@@ -957,12 +970,19 @@ class _PomodoroHomeState extends State<PomodoroHome>
                 // Picker Area
                 SizedBox(
                   height: 200,
-                  child: CupertinoTimerPicker(
-                    mode: CupertinoTimerPickerMode.hm,
-                    initialTimerDuration: Duration(minutes: _workTimeInMinutes),
-                    onTimerDurationChanged: (Duration changedtimer) {
-                      tempTotalMinutes = changedtimer.inMinutes;
-                    },
+                  child: CupertinoTheme(
+                    data: const CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                        pickerTextStyle: TextStyle(color: Colors.black, fontSize: 22),
+                      ),
+                    ),
+                    child: CupertinoTimerPicker(
+                      mode: CupertinoTimerPickerMode.hm,
+                      initialTimerDuration: Duration(minutes: _workTimeInMinutes),
+                      onTimerDurationChanged: (Duration changedtimer) {
+                        tempTotalMinutes = changedtimer.inMinutes;
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -972,7 +992,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: themeSettings.activeColorTheme == 'Derin Uzay' ? Colors.indigoAccent : Theme.of(context).primaryColor,
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: const StadiumBorder(),
@@ -1494,7 +1514,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
 
 
   Widget _buildStatsView() {
-    return _wrapWithJapanBg(SafeArea(
+    return _wrapWithThemeBg(SafeArea(
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -1760,8 +1780,11 @@ class _PomodoroHomeState extends State<PomodoroHome>
     }
   }
 
+
+
+
   Widget _buildSettingsView() {
-    return _wrapWithJapanBg(SettingsView(
+    return _wrapWithThemeBg(SettingsView(
       key: _settingsKey,
       onNavigateToMarket: () {
         setState(() {
@@ -1770,7 +1793,6 @@ class _PomodoroHomeState extends State<PomodoroHome>
       },
     ));
   }
-
 
   Widget _buildTimerView() {
     final String? themeBackgroundPath = switch (themeSettings.activeColorTheme) {
@@ -1869,7 +1891,9 @@ class _PomodoroHomeState extends State<PomodoroHome>
                           tree.x -= tree.speed * 0.4; 
                           // Reset tree when it goes off screen
                           if (tree.x < -50) {
-                            tree.x = 400 + _random.nextDouble() * 100;
+                            double extraSpace = themeSettings.activeColorTheme == 'Derin Uzay' ? 600 + _random.nextDouble() * 300 : 0;
+                            tree.x = 400 + _random.nextDouble() * 100 + extraSpace;
+                            tree.yOffset = _random.nextDouble() * 260 - 130;
                             tree.scale = 0.8 + _random.nextDouble() * 0.5;
                             tree.speed = 2.0 + _random.nextDouble() * 0.5;
                             tree.assetIndex = _random.nextInt(_treeAssets.length); // Pick a new random tree when wrapping
@@ -1879,7 +1903,9 @@ class _PomodoroHomeState extends State<PomodoroHome>
                         for (var bush in _bushes) {
                           bush.x -= bush.speed * 0.4;
                           if (bush.x < -80) {
-                            bush.x = 400 + 20.0;
+                            double extraSpace = themeSettings.activeColorTheme == 'Derin Uzay' ? 600 + _random.nextDouble() * 300 : 0;
+                            bush.x = 400 + 20.0 + extraSpace;
+                            bush.yOffset = _random.nextDouble() * 260 - 130;
                             bool isRock = _random.nextDouble() > 0.6;
                             bush.scale = !isRock ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2;
                             bush.speed = 1.5 + _random.nextDouble() * 0.5;
@@ -1890,7 +1916,9 @@ class _PomodoroHomeState extends State<PomodoroHome>
                         for (var bush in _bushes2) {
                           bush.x -= bush.speed * 0.4;
                           if (bush.x < -80) {
-                            bush.x = 400 + 20.0;
+                            double extraSpace = themeSettings.activeColorTheme == 'Derin Uzay' ? 600 + _random.nextDouble() * 300 : 0;
+                            bush.x = 400 + 20.0 + extraSpace;
+                            bush.yOffset = _random.nextDouble() * 260 - 130;
                             bool isRock = _random.nextDouble() > 0.6;
                             bush.scale = !isRock ? 1.0 + _random.nextDouble() * 0.3 : 0.75 + _random.nextDouble() * 0.2;
                             bush.speed = 1.6 + _random.nextDouble() * 0.5;
@@ -1901,7 +1929,9 @@ class _PomodoroHomeState extends State<PomodoroHome>
                         for (var bush in _bushes3) {
                           bush.x -= bush.speed * 0.4;
                           if (bush.x < -80) {
-                            bush.x = 400 + 20.0;
+                            double extraSpace = themeSettings.activeColorTheme == 'Derin Uzay' ? 600 + _random.nextDouble() * 300 : 0;
+                            bush.x = 400 + 20.0 + extraSpace;
+                            bush.yOffset = _random.nextDouble() * 260 - 130;
                             bool isRock = _random.nextDouble() > 0.6;
                             bush.scale = !isRock ? 0.9 + _random.nextDouble() * 0.3 : 0.65 + _random.nextDouble() * 0.2;
                             bush.speed = 1.7 + _random.nextDouble() * 0.5;
@@ -1946,6 +1976,13 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                     fit: BoxFit.cover,
                                   ),
                                 ),
+                              ),
+                            )
+                          else if (themeSettings.activeColorTheme == 'Derin Uzay')
+                            Positioned.fill(
+                              child: Image.asset(
+                                'assets/backgrounds/uzay_b.jpeg',
+                                fit: BoxFit.cover,
                               ),
                             )
                           else
@@ -1995,7 +2032,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                  child: Image.asset('assets/backgrounds/machu_pichu_dag.png', fit: BoxFit.contain),
                                ),
                             )
-                          else
+                          else if (themeSettings.activeColorTheme != 'Derin Uzay')
                             Positioned(
                                left: -50,
                                bottom: 80,
@@ -2007,11 +2044,11 @@ class _PomodoroHomeState extends State<PomodoroHome>
                           // 3. Moving Trees (Behind the Slope)
                           ..._trees.map((tree) => Positioned(
                                 left: tree.x,
-                                bottom: (tree.x * 0.375) + 75,
+                                bottom: (tree.x * 0.375) + (themeSettings.activeColorTheme == 'Derin Uzay' ? 50 + tree.yOffset : 75),
                                     child: Transform.rotate(
                                         angle: -0.358,
                                         child: Transform.scale(
-                                            scale: 1.2 + ((tree.scale - 0.8) * 2.0), 
+                                            scale: (themeSettings.activeColorTheme == 'Derin Uzay' ? 0.55 : 1.0) * (1.2 + ((tree.scale - 0.8) * 2.0)), 
                                             alignment: Alignment.bottomCenter,
                                             child: SizedBox(
                                                 width: 60, 
@@ -2025,7 +2062,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                     ),
                               )),
                           // 4. The Main Mountain Slope (Overlaps trees)
-                          if (themeSettings.activeColorTheme != 'Japon' && themeSettings.activeColorTheme != 'Mısır' && themeSettings.activeColorTheme != 'İskandinavya' && themeSettings.activeColorTheme != 'Machu Picchu')
+                          if (themeSettings.activeColorTheme != 'Japon' && themeSettings.activeColorTheme != 'Mısır' && themeSettings.activeColorTheme != 'İskandinavya' && themeSettings.activeColorTheme != 'Machu Picchu' && themeSettings.activeColorTheme != 'Derin Uzay')
                             Positioned.fill(
                               child: CustomPaint(
                                 painter: ModernMountainPainter(
@@ -2089,39 +2126,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                                 ),
                               ),
                             ),
-                          // 6. The Car (Asset Image - Top Layer)
-                          Positioned(
-                            left: 100,
-                            // Reduced bounce amplitude: changed multiplier from 1.5 to 0.4
-                            bottom: 110 + (sin(_animationController.value * pi * 8) * 0.4), 
-                            child: Transform.rotate(
-                              // Perfectly matching the mountain slope: atan(0.375) ~ 0.358 radians
-                              angle: -0.358, 
-                              child: Transform.translate(
-                                  // Arabanın tekerleklerinin dağa tam basması için ofset (10 birim aşağı)
-                                  offset: const Offset(0, 10), 
-                                  child: SizedBox(
-                                      width: 100, // Boyut artırıldı
-                                      height: 100, // Boyut artırıldı
-                                      child: Transform.scale(
-                                          scale: _equippedCarScale,
-                                          child: Image.asset(
-                                              _equippedCarPath, 
-                                              fit: BoxFit.contain,
-                                      // Fallback builder in case asset is missing
-                                      errorBuilder: (context, error, stackTrace) {
-                                          return const Icon(
-                                              Icons.directions_car_filled_rounded,
-                                              size: 55,
-                                              color: Color(0xFFD32F2F),
-                                          );
-                                      },
-                                          ),
-                                      ),
-                                  ),
-                              ),
-                          ),
-                          ), // Closes Positioned
+                          // The Car was here. Moved to the end.
                           // Row 1: mixed bushes and rocks
                           ..._bushes.map((bush) {
                             final isRock = bush.isRock;
@@ -2131,11 +2136,11 @@ class _PomodoroHomeState extends State<PomodoroHome>
                             final assetPath = allShopItems.firstWhere((item) => item.id == assetId, orElse: () => allShopItems.first).imagePath ?? fallback;
                             return Positioned(
                                 left: bush.x,
-                                bottom: (bush.x * 0.375) + 20,
+                                bottom: (bush.x * 0.375) + (themeSettings.activeColorTheme == 'Derin Uzay' ? 50 + bush.yOffset : 20),
                                 child: Transform.rotate(
                                     angle: -0.358,
                                     child: Transform.scale(
-                                        scale: bush.scale,
+                                        scale: bush.scale * (themeSettings.activeColorTheme == 'Derin Uzay' ? 0.55 : 1.0),
                                         alignment: Alignment.bottomCenter,
                                         child: SizedBox(
                                             width: !isRock ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
@@ -2155,11 +2160,11 @@ class _PomodoroHomeState extends State<PomodoroHome>
                             final assetPath = allShopItems.firstWhere((item) => item.id == assetId, orElse: () => allShopItems.first).imagePath ?? fallback;
                             return Positioned(
                                 left: bush.x,
-                                bottom: (bush.x * 0.375) - 15,
+                                bottom: (bush.x * 0.375) + (themeSettings.activeColorTheme == 'Derin Uzay' ? 50 + bush.yOffset : -15),
                                 child: Transform.rotate(
                                     angle: -0.358,
                                     child: Transform.scale(
-                                        scale: bush.scale,
+                                        scale: bush.scale * (themeSettings.activeColorTheme == 'Derin Uzay' ? 0.55 : 1.0),
                                         alignment: Alignment.bottomCenter,
                                         child: SizedBox(
                                             width: !isRock ? 58 : (35 + bush.scale * 26).clamp(35.0, 55.0),
@@ -2179,11 +2184,11 @@ class _PomodoroHomeState extends State<PomodoroHome>
                             final assetPath = allShopItems.firstWhere((item) => item.id == assetId, orElse: () => allShopItems.first).imagePath ?? fallback;
                             return Positioned(
                                 left: bush.x,
-                                bottom: (bush.x * 0.375) - 45, // Lowest row
+                                bottom: (bush.x * 0.375) + (themeSettings.activeColorTheme == 'Derin Uzay' ? 50 + bush.yOffset : -45), // Lowest row
                                 child: Transform.rotate(
                                     angle: -0.358,
                                     child: Transform.scale(
-                                        scale: bush.scale,
+                                        scale: bush.scale * (themeSettings.activeColorTheme == 'Derin Uzay' ? 0.55 : 1.0),
                                         alignment: Alignment.bottomCenter,
                                         child: SizedBox(
                                             width: !isRock ? 52 : (28 + bush.scale * 26).clamp(28.0, 48.0),
@@ -2274,7 +2279,39 @@ class _PomodoroHomeState extends State<PomodoroHome>
                               ),
                             ),
                           ),
-                          // Car was moved up to fix depth sorting
+                          // 6. The Car (Asset Image - Top Layer)
+                          Positioned(
+                            left: 100,
+                            // Reduced bounce amplitude: changed multiplier from 1.5 to 0.4
+                            bottom: 110 + (sin(_animationController.value * pi * 8) * 0.4), 
+                            child: Transform.rotate(
+                              // Perfectly matching the mountain slope: atan(0.375) ~ 0.358 radians
+                              angle: -0.358, 
+                              child: Transform.translate(
+                                  // Arabanın tekerleklerinin dağa tam basması için ofset (10 birim aşağı)
+                                  offset: const Offset(0, 10), 
+                                  child: SizedBox(
+                                      width: 100, // Boyut artırıldı
+                                      height: 100, // Boyut artırıldı
+                                      child: Transform.scale(
+                                          scale: _equippedCarScale,
+                                          child: Image.asset(
+                                              _equippedCarPath, 
+                                              fit: BoxFit.contain,
+                                      // Fallback builder in case asset is missing
+                                      errorBuilder: (context, error, stackTrace) {
+                                          return const Icon(
+                                              Icons.directions_car_filled_rounded,
+                                              size: 55,
+                                              color: Color(0xFFD32F2F),
+                                          );
+                                      },
+                                          ),
+                                      ),
+                                  ),
+                              ),
+                          ),
+                          ), // Closes Positioned
                       ],
                     );
                     },
@@ -2289,7 +2326,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                 left: 2,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: hasThemeBackground ? Colors.white.withValues(alpha: 0.6) : Theme.of(context).primaryColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
@@ -2312,7 +2349,7 @@ class _PomodoroHomeState extends State<PomodoroHome>
                 right: 2,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: hasThemeBackground ? Colors.white.withValues(alpha: 0.6) : Theme.of(context).primaryColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
@@ -2475,24 +2512,43 @@ class _PomodoroHomeState extends State<PomodoroHome>
     return timerContent;
   }
 
-  Widget _wrapWithJapanBg(Widget child) {
-    final bool isJapon = themeSettings.activeColorTheme == 'Japon';
+  Widget _wrapWithThemeBg(Widget child) {
+    final String activeTheme = themeSettings.activeColorTheme;
+    final bool isJapon = activeTheme == 'Japon';
+    final bool isDerinUzay = activeTheme == 'Derin Uzay';
+    final bool isMisir = activeTheme == 'Mısır';
+    final bool isIskandinavya = activeTheme == 'İskandinavya';
+    final bool isMachuPicchu = activeTheme == 'Machu Picchu';
+
+    String? bgPath;
+    if (isJapon) {
+      bgPath = 'assets/backgrounds/Japan_Background.png';
+    } else if (isDerinUzay) {
+      bgPath = 'assets/backgrounds/uzay_bg.jpeg';
+    } else if (isMisir) {
+      bgPath = 'assets/backgrounds/msr_bg.jpeg';
+    } else if (isIskandinavya) {
+      bgPath = 'assets/backgrounds/i_bg.jpeg';
+    } else if (isMachuPicchu) {
+      bgPath = 'assets/backgrounds/Mp_bg.jpeg';
+    }
+
     return Stack(
       fit: StackFit.expand,
       children: [
-        isJapon
-            ? Image.asset(
-                'assets/backgrounds/Japan_Background.png',
-                fit: BoxFit.cover,
-              )
-            : const SizedBox.shrink(),
+        if (bgPath != null)
+          Image.asset(
+            bgPath,
+            fit: BoxFit.cover,
+          ),
         child,
       ],
     );
   }
 
   Widget _buildShopView() {
-    return _wrapWithJapanBg(ShopView(
+    return _wrapWithThemeBg(ShopView(
+      key: shopViewKey,
       currentKm: _totalKm,
       onPurchase: (cost) {
         setState(() {
@@ -2517,9 +2573,15 @@ class _PomodoroHomeState extends State<PomodoroHome>
           _activeCalilar = eqCalilar;
           _activeKayalar = eqKayalar;
 
+          if (themeSettings.activeColorTheme == 'Derin Uzay') {
+            _activeTrees.removeWhere((id) => !id.startsWith('planet_') && !id.startsWith('meteor_'));
+            _activeCalilar.removeWhere((id) => !id.startsWith('planet_') && !id.startsWith('meteor_'));
+            _activeKayalar.removeWhere((id) => !id.startsWith('planet_') && !id.startsWith('meteor_'));
+          }
+
           // Dağdaki ağaçların ve çalıların hemen güncellenmesi için indekslerini yenile
           for (var tree in _trees) {
-            tree.assetIndex = _random.nextInt(eqTrees.isNotEmpty ? eqTrees.length : 1);
+            tree.assetIndex = _random.nextInt(_activeTrees.isNotEmpty ? _activeTrees.length : 1);
           }
           for (var bush in [..._bushes, ..._bushes2, ..._bushes3]) {
             if (bush.isRock) {
@@ -2590,8 +2652,8 @@ class _PomodoroHomeState extends State<PomodoroHome>
 
     return Scaffold(
       extendBody: isDerinUzayTheme,
-      backgroundColor: isDerinUzayTheme
-          ? const Color(0xFF0A1628)
+      backgroundColor: (isJaponTheme || isDerinUzayTheme || isMisirTheme || isIskandinavyaTheme || isMachuPicchuTheme)
+          ? Colors.transparent
           : Theme.of(context).scaffoldBackgroundColor,
       body: IndexedStack(
         index: _bottomNavIndex,
@@ -2722,6 +2784,7 @@ class _SettingsViewState extends State<SettingsView> {
     if (_showTheme) {
       return ThemeView(
         onBack: () => setState(() => _showTheme = false),
+        onNavigateToMarket: widget.onNavigateToMarket,
       );
     }
 
@@ -2730,11 +2793,16 @@ class _SettingsViewState extends State<SettingsView> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 20),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 20),
               child: Text(
                 'Ayarlar',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+                style: TextStyle(
+                  fontSize: 24, 
+                  fontWeight: FontWeight.bold, 
+                  color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87,
+                  shadows: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? [const Shadow(color: Colors.black87, blurRadius: 6)] : null,
+                ),
               ),
             ),
             _buildSettingsItem(
@@ -3269,13 +3337,18 @@ class _SoundViewState extends State<SoundView> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+                  icon: Icon(Icons.arrow_back_ios_new, color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87),
                   onPressed: widget.onBack,
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Ses',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 20, 
+                      fontWeight: FontWeight.bold, 
+                      color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87,
+                      shadows: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? [const Shadow(color: Colors.black87, blurRadius: 6)] : null,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -3452,13 +3525,18 @@ class AboutView extends StatelessWidget {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+                  icon: Icon(Icons.arrow_back_ios_new, color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87),
                   onPressed: onBack,
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Hakkında',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 20, 
+                      fontWeight: FontWeight.bold, 
+                      color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87,
+                      shadows: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? [const Shadow(color: Colors.black87, blurRadius: 6)] : null,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -3604,13 +3682,18 @@ class _LanguageViewState extends State<LanguageView> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+                  icon: Icon(Icons.arrow_back_ios_new, color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87),
                   onPressed: widget.onBack,
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Dil',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 20, 
+                      fontWeight: FontWeight.bold, 
+                      color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87,
+                      shadows: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? [const Shadow(color: Colors.black87, blurRadius: 6)] : null,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -3673,8 +3756,9 @@ class _LanguageViewState extends State<LanguageView> {
 
 class ThemeView extends StatefulWidget {
   final VoidCallback onBack;
+  final VoidCallback? onNavigateToMarket;
 
-  const ThemeView({super.key, required this.onBack});
+  const ThemeView({super.key, required this.onBack, this.onNavigateToMarket});
 
   @override
   State<ThemeView> createState() => _ThemeViewState();
@@ -3738,7 +3822,7 @@ class _ThemeViewState extends State<ThemeView> {
                        textAlign: TextAlign.center,
                      ),
                      content: const Text(
-                       'Lütfen bu temayı kullanabilmek için Mağaza (Market) bölümünden satın alın.',
+                       'Lütfen bu temayı kullanabilmek için Mağaza bölümünden satın alın.',
                        textAlign: TextAlign.center,
                        style: TextStyle(fontSize: 16),
                      ),
@@ -3750,7 +3834,11 @@ class _ThemeViewState extends State<ThemeView> {
                            foregroundColor: Colors.white,
                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                          ),
-                         onPressed: () => Navigator.of(context).pop(),
+                         onPressed: () {
+                           Navigator.of(context).pop();
+                           shopViewKey.currentState?.switchToThemesTab();
+                           widget.onNavigateToMarket?.call();
+                         },
                          child: const Text('Tamam', style: TextStyle(fontWeight: FontWeight.bold)),
                        ),
                      ],
@@ -3758,7 +3846,7 @@ class _ThemeViewState extends State<ThemeView> {
                  }
                );
             } else {
-               themeSettings.updateTheme(title);
+               shopViewKey.currentState?.equipThemeByName(title);
             }
           },
           borderRadius: BorderRadius.circular(16),
@@ -3881,13 +3969,18 @@ class _ThemeViewState extends State<ThemeView> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+                  icon: Icon(Icons.arrow_back_ios_new, color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87),
                   onPressed: widget.onBack,
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Uygulama Teması',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 20, 
+                      fontWeight: FontWeight.bold, 
+                      color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87,
+                      shadows: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? [const Shadow(color: Colors.black87, blurRadius: 6)] : null,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -4136,13 +4229,18 @@ class _CustomizeTimerViewState extends State<CustomizeTimerView> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+                  icon: Icon(Icons.arrow_back_ios_new, color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87),
                   onPressed: widget.onBack,
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'Zamanlayıcıyı Özelleştir',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 20, 
+                      fontWeight: FontWeight.bold, 
+                      color: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? Colors.white : Colors.black87,
+                      shadows: ['Japon', 'Derin Uzay', 'Mısır', 'İskandinavya', 'Machu Picchu'].contains(themeSettings.activeColorTheme) ? [const Shadow(color: Colors.black87, blurRadius: 6)] : null,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),

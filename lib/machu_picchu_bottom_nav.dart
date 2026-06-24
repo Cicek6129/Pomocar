@@ -12,12 +12,12 @@ class MachuPicchuBottomNavBar extends StatelessWidget {
   });
 
   static const Color _barBackground = Color(0xFFE8F5E9);
-  static const Color _passiveTint = Color(0xFF1B5E20);
+  static const Color _passiveTint = Color(0xFF071F08); // Darker green/black for visibility
 
-  static const double _barHeight = 62;
-  static const double _slotSize = 54;
-  static const double _baseIconSize = 42;
-  static const double _iconVerticalOffset = 7;
+  static const double _barHeight = 56;
+  static const double _slotSize = 48;
+  static const double _baseIconSize = 34;
+  static const double _iconVerticalOffset = -2;
 
   static const List<
       ({
@@ -32,45 +32,53 @@ class MachuPicchuBottomNavBar extends StatelessWidget {
       inactive: 'assets/Icons/machu_picchu/home_pasif_mp.png',
       activeScale: 2.08,
       passiveScale: 1.92,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/machu_picchu/market_aktif_mp.png',
       inactive: 'assets/Icons/machu_picchu/market_pasif_mp.png',
       activeScale: 2.12,
       passiveScale: 1.92,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/machu_picchu/stats_aktif_mp.png',
       inactive: 'assets/Icons/machu_picchu/stats_pasif_mp.png',
       activeScale: 2.08,
       passiveScale: 1.92,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/machu_picchu/settings_aktif_mp.png',
       inactive: 'assets/Icons/machu_picchu/settings_pasif_mp.png',
       activeScale: 2.08,
       passiveScale: 1.92,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: _barBackground,
-      child: Container(
-        decoration: BoxDecoration(
-          color: _barBackground,
-          border: Border(
-            top: BorderSide(
-              color: const Color(0xFF2E7D32).withValues(alpha: 0.22),
-              width: 1,
+    return Stack(
+      children: [
+        // Scaled background image
+        Positioned.fill(
+          child: ClipRect(
+            child: Transform.translate(
+              offset: const Offset(0, 3), // Shift up slightly from previous value
+              child: Transform.scale(
+                scale: 1.15, // Enlarge background for Machu Picchu
+                child: Image.asset(
+                  'assets/Cards/machu_pichu_icons_background.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
         ),
+        // Nav items
+        Material(
+          color: Colors.transparent,
         child: SafeArea(
           top: false,
           child: SizedBox(
@@ -93,7 +101,8 @@ class MachuPicchuBottomNavBar extends StatelessWidget {
             ),
           ),
         ),
-      ),
+        ),
+      ],
     );
   }
 }
@@ -120,7 +129,7 @@ class _MachuNavItem extends StatelessWidget {
     final visualScale = isSelected ? item.activeScale : item.passiveScale;
 
     return Material(
-      color: MachuPicchuBottomNavBar._barBackground,
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         splashColor: const Color(0xFF2E7D32).withValues(alpha: 0.18),

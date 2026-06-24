@@ -11,15 +11,13 @@ class MisirBottomNavBar extends StatelessWidget {
     required this.onTap,
   });
 
-  static const Color _barBackground = Color(0xFFFFF8E1);
-
   /// İnce çizgili pasif PNG'leri koyu altın silüete çevirir (krem zeminde net).
-  static const Color _passiveTint = Color(0xFF7A5C1E);
+  static const Color _passiveTint = Color(0xFF3E2723); // Dark chocolate brown
 
   /// Çubuk yüksekliği Japan ile aynı; büyüme yalnızca ikon ölçeğinde.
-  static const double _barHeight = 62;
-  static const double _slotSize = 58;
-  static const double _baseIconSize = 42;
+  static const double _barHeight = 56;
+  static const double _slotSize = 50;
+  static const double _baseIconSize = 34;
 
   /// Aktif PNG'lerde fazla şeffaf kenar varsa [activeScale] > [passiveScale] olmalı.
   static const double _passiveScale = 1.92;
@@ -35,42 +33,39 @@ class MisirBottomNavBar extends StatelessWidget {
       active: 'assets/Icons/misir/egypt_odak_aktif.png',
       inactive: 'assets/Icons/misir/egypt_odak_pasif.png',
       activeScale: 2.08,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/misir/egypt_market_aktif.png',
       inactive: 'assets/Icons/misir/egypt_market_pasif.png',
       activeScale: 2.12,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/misir/egypt_istatistik_aktif.png',
       inactive: 'assets/Icons/misir/egypt_istatistik_pasif.png',
       activeScale: 1.98,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
     (
       active: 'assets/Icons/misir/egypt_ayarlar_aktif.png',
       inactive: 'assets/Icons/misir/egypt_ayarlar_pasif.png',
       activeScale: 2.08,
-      activeBaseSize: 42,
+      activeBaseSize: 34,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: _barBackground,
-      child: Container(
-        decoration: BoxDecoration(
-          color: _barBackground,
-          border: Border(
-            top: BorderSide(
-              color: const Color(0xFF8D6E63).withValues(alpha: 0.35),
-              width: 1,
-            ),
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/Cards/egypt_icons_background.png'),
+          fit: BoxFit.cover,
         ),
+      ),
+      child: Material(
+        color: Colors.transparent,
         child: SafeArea(
           top: false,
           child: SizedBox(
@@ -116,31 +111,34 @@ class _MisirNavItem extends StatelessWidget {
         isSelected ? item.activeScale : MisirBottomNavBar._passiveScale;
 
     return Material(
-      color: MisirBottomNavBar._barBackground,
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         splashColor: const Color(0xFFFFC107).withValues(alpha: 0.2),
         highlightColor: const Color(0xFFFFECB3).withValues(alpha: 0.65),
         child: Center(
-          child: SizedBox(
-            width: MisirBottomNavBar._slotSize,
-            height: MisirBottomNavBar._slotSize,
-            child: ClipRect(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 220),
-                switchInCurve: Curves.easeOut,
-                switchOutCurve: Curves.easeIn,
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                child: _MisirNavIcon(
-                  key: ValueKey(isSelected),
-                  assetPath: isSelected ? item.active : item.inactive,
-                  visualScale: visualScale,
-                  renderSize: isSelected
-                      ? item.activeBaseSize
-                      : MisirBottomNavBar._baseIconSize,
-                  isSelected: isSelected,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16.0), // Move icons up
+            child: SizedBox(
+              width: MisirBottomNavBar._slotSize,
+              height: MisirBottomNavBar._slotSize,
+              child: ClipRect(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  switchInCurve: Curves.easeOut,
+                  switchOutCurve: Curves.easeIn,
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                  child: _MisirNavIcon(
+                    key: ValueKey(isSelected),
+                    assetPath: isSelected ? item.active : item.inactive,
+                    visualScale: visualScale,
+                    renderSize: isSelected
+                        ? item.activeBaseSize
+                        : MisirBottomNavBar._baseIconSize,
+                    isSelected: isSelected,
+                  ),
                 ),
               ),
             ),
@@ -176,20 +174,40 @@ class _MisirNavIcon extends StatelessWidget {
       gaplessPlayback: true,
     );
 
+    Widget finalImage;
+
     if (!isSelected) {
-      image = ColorFiltered(
+      finalImage = ColorFiltered(
         colorFilter: const ColorFilter.mode(
           MisirBottomNavBar._passiveTint,
           BlendMode.srcIn,
         ),
         child: image,
       );
+    } else {
+      // Active icon is yellow, so it needs a strong dark shadow to pop from the yellow/tan bricks
+      finalImage = Stack(
+        alignment: Alignment.center,
+        children: [
+          Transform.translate(
+            offset: const Offset(1.5, 2.0),
+            child: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0x99000000), // Stronger dark shadow
+                BlendMode.srcIn,
+              ),
+              child: image,
+            ),
+          ),
+          image,
+        ],
+      );
     }
 
     return Center(
       child: Transform.scale(
         scale: visualScale,
-        child: image,
+        child: finalImage,
       ),
     );
   }
